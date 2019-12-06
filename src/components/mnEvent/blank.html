@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="author" content="FrankLee"/>
+    <meta name="description" content="GoMobile - A next generation web app theme"/>
+    <meta name="keywords" content="mobile web app, mobile template, mobile design, mobile app design, mobile app theme, mobile wordpress theme, my mobile app"/>
+    <title>记账事件---{{ "查看" if mnEvent and mnEvent.event_id else "新增"}}</title>
+    <link type="text/css" rel="stylesheet" href="/static/public/css/style.css">
+    <link type="text/css" rel="stylesheet" href="/static/public/colors/green/green.css">
+    <link type="text/css" rel="stylesheet" href="/static/public/css/idangerous.swiper.css">
+    <link type="text/css" rel="stylesheet" href="/static/public/css/swipebox.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/public/css/mn.css"/>
+</head>
+<body>
+{% include "mn/head.html" %}
+
+<div class="swiper-container swiper-parent">
+    <div class="swiper-wrapper">
+
+        <div class="swiper-slide sliderbg">
+            <div class="swiper-container swiper-nested">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="slide-inner">
+                            <div class="pages_container" style="min-height: 1000px;">
+                                <form id="addEvent" action="/mnEvent/saverOrUpdate" method="post">
+                                    <input type="hidden" name="token" value="{{token}}">
+                                    <input id="eventId" name="event_id" type="hidden" value="{{mnEvent.event_id if mnEvent else "" }}"/>
+                                    <input  name="user_id" type="hidden" value="{{mnEvent.user_id if mnEvent else ""}}"/>
+                                    <h2 class="page_title">{{  "查看" if mnEvent and mnEvent.event_id else "新增"}}事件</h2>
+                                    <div class="toogle_wrap_blog radius8" >
+                                        <div style="color: white;font-size: 16px;line-height: 20px;">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您新建事件后，在记账时可以选择事件进行关联(默认不关联事件)，这样你就可以查看该事件下的记账信息!
+                                        </div>
+                                    </div>
+
+                                    <div class="mnBlank">
+                                        <table border="1px" width="100%" class="mnItemTable">
+                                            <tr >
+                                                <td width="40%" align="center">名称</td>
+                                                <td width="60%" align="left"><input id="eventName" name="event_name" value="{{mnEvent.event_name if mnEvent else ""}}" type="text"  class="tr_left_input"/></td>
+                                            </tr>
+                                            <tr >
+                                                <td width="40%" align="center" >
+                                                    <div style="vertical-align: middle">描述</div>
+                                                </td>
+                                                <td width="60%" align="left">
+                                                    <textarea name="event_desc" class="tr_left_input"  style=" line-height: 20px;" cols="20" rows="5">{{mnEvent.event_desc if mnEvent else ""}}</textarea>
+                                                </td>
+                                            </tr>
+                                            <tr >
+                                                <td width="40%" align="center" >
+                                                    <div style="vertical-align: middle">总支出</div>
+                                                </td>
+                                                <td width="60%" align="left">
+                                                    &yen;{{mnEvent.moneyCount if mnEvent and mnEvent.moneyCount else  0}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        {% if mnEvent and mnEvent.event_id %}
+                                                <a onclick="saveEvent()" class="form_submit button_12 blue blue_borderbottom radius4">保存</a>
+                                                <a class="button_12 black black_borderbottom radius4" onclick="deleteEvent()">删除</a>
+                                        {%else%}
+                                                <div onclick="saveEvent()" class="form_submit button_12 blue blue_borderbottom radius4">保存</div>
+                                        {%endif%}
+                                    </div>
+
+
+                                    <h4 style="padding: 70px 0 20px 0;">事件记账明细</h4>
+                                    <ul class="responsive_table" style="font-size: 14px;">
+                                        <li class="table_row" style="font-size: 18px;">
+                                            <div class="table_section" style="width:38%">支出名称</div>
+                                            <div class="table_section_last" style="width:32%">金额</div>
+                                            <div class="table_section_small" style="width:25%">日期</div>
+
+                                        </li>
+
+                            {%if mnItemList and mnItemList|length > 0%}
+                                {%for mnItem in mnItemList%}
+                                        <li class="table_row" style="cursor: pointer" onclick="window.location.href='/mnItem/blank?item_id={{mnItem.item_id}}'">
+                                            <div class="table_section" style="width:38%">{{mnItem.item_name}}</div>
+                                            <div class="table_section_last" style="width:32%">
+                                                &yen;{{mnItem.money if mnItem.money else 0 }}
+                                            </div>
+                                            <div class="table_section_small" style="width:25%">{{mnItem.note_date}}</div>
+
+                                        </li>
+                                {%endfor%}
+                            {%endif%}
+                                    </ul>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/static/public/plugins/jquery-ui/1.11.4/jquery-ui.css">
+<script type="text/javascript" src="/static/public/js/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="/static/public/plugins/jquery-ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" src="/static/public/js/mn.js" ></script>
+
+
+<script type="text/javascript">
+    $(function(){
+        $('#header').animate({'top':'0px'},400);
+    });
+</script>
+</body>
+</html>

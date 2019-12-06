@@ -4,6 +4,20 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+import '../static/public/css/style.css'
+import '../static/public/colors/green/green.css'
+import '../static/public/css/idangerous.swiper.css'
+import '../static/public/css/swipebox.css'
+
+// 定义全局组件(自定义)
+import Header from '@/components/mn/header'
+Vue.component('Header',Header);
+
+//引用第三方ui组件
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -13,3 +27,6 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+
+

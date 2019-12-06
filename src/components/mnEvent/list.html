@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="author" content="FrankLee" />
+    <meta name="description" content="GoMobile - A next generation web app theme" />
+    <meta name="keywords" content="mobile web app, mobile template, mobile design, mobile app design, mobile app theme, mobile wordpress theme, my mobile app" />
+
+    <title>记账事件</title>
+    <link type="text/css" rel="stylesheet" href="/static/public/css/style.css">
+    <link type="text/css" rel="stylesheet" href="/static/public/colors/green/green.css">
+    <link type="text/css" rel="stylesheet" href="/static/public/css/idangerous.swiper.css">
+    <link type="text/css" rel="stylesheet" href="/static/public/css/swipebox.css" />
+    <script type="text/javascript" src="/static/public/js/jquery-1.10.1.min.js"></script>
+    <script src="/static/public/js/jquery.validate.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="/static/public/js/jquery.swipebox.js"></script>
+    <script type="text/javascript" src="/static/public/js/idangerous.swiper-2.1.min.js"></script>
+    <script type="text/javascript" src="/static/public/js/idangerous.swiper.scrollbar-2.1.js"></script>
+    <script type="text/javascript" src="/static/public/js/jquery.tabify.js"></script>
+    <script type="text/javascript" src="/static/public/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="/static/public/js/code.js"></script>
+    <script type="text/javascript" src="/static/public/js/load.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#header').animate({'top':'0px'},400);
+        });
+    </script>
+</head>
+<body>
+{% include "mn/head.html" %}
+
+<div class="swiper-container swiper-parent">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide sliderbg">
+            <div class="swiper-container swiper-nested">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="slide-inner">
+                            <div class="pages_container">
+                                <h2 class="page_title">记账事件列表</h2>
+                                <blockquote>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您可以新建事件，在记账时可以选择事件进行关联(默认不关联事件)，这样你就可以查看该事件下的记账信息!
+                                </blockquote>
+                                <h4>记账事件统计</h4>
+                                <ul class="responsive_table" style="font-size: 18px;">
+                                    <li class="table_row">
+                                        <div class="table_section_small">序号</div>
+                                        <div class="table_section">事件名称</div>
+                                        <div class="table_section_last">总支出</div>
+                                    </li>
+                                    {%if mnEventList and mnEventList|length > 0%}
+                                        {%for mnEvent in mnEventList%}
+                                                <li class="table_row" style="cursor: pointer" onclick="window.location.href='/mnEvent/blank?id={{mnEvent.event_id}}'">
+                                                    <div class="table_section_small"> {{loop.index }}</div>
+                                                    <div class="table_section">{{mnEvent.event_name}}</div>
+                                                    <div class="table_section_last">
+                                                        &yen;{{mnEvent.moneyCount if mnEvent.moneyCount else 0}}
+                                                    </div>
+                                                </li>
+                                        {%endfor%}
+                                    {%endif%}
+                                </ul>
+                                <a href="/mnEvent/blank" class="form_submit button_12 blue blue_borderbottom radius4" style="width:100%">新建事件</a>
+                                <div class="clearfix"></div>
+                                <div class="scrolltop radius20"><a href="#"><img src="/static/public/images/icons/top.png" alt="Go on top" title="Go on top" /></a></div>
+                            </div>
+                            <!--End of page container-->
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-scrollbar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

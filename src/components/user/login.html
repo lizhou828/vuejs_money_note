@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <title>记账本-登录</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/public/css/home.css">
+    <link rel="stylesheet" type="text/css" href="/static/public/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/static/public/css/mn.css">
+    <link rel="stylesheet" type="text/css" href="/static/public/css/content.css">
+
+    <script type="text/javascript" src="/static/public/js/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="/static/public/js/mn.js"></script>
+    <script type="text/javascript">
+        function mm(mid){
+            document.getElementById(mid).type = document.getElementById(mid).type == "password" ? "text" : "password";
+        }
+        function showFocus(obj){
+            if(obj.value=="请输入账号"){
+                obj.value="";
+            }
+        }
+        function showBlur(obj){
+            if(obj.value==""){
+                obj.value="请输入账号";
+            }
+        }
+        $(function(){
+            $("#username").val("{{ userName }}");
+            $("#mm").val("{{ password }}");
+
+            $("#login").click(function(){
+                var user_name = $("#username").val();
+                var password = $("#mm").val();
+                var rememberMe = $("#rememberMe").val();
+                <!-- alert("document.referrer=" + document.referrer + ",fromUrl=${fromUrl}"  ); -->
+                $.ajax({
+                    "type":"post",
+                    "url":"/user/ajaxLogin",
+                    "data":JSON.stringify({"userName":user_name,"password":password,"rememberMe":rememberMe,"fromUrl":"{{fromUrl}}"}),
+                    "dataType":"json",
+                    contentType:"application/json",
+                    success:function(data){
+                        if(data.flag == 'error'){
+                            alert(data.msg);
+                        }
+                        if(data.flag == 'ok'){
+                            window.location.href = "{{ fromUrl }}" ;
+                            return false;
+                        }
+                    },
+                    error:function(data){
+                        alert("服务器繁忙!");
+                        return false;
+                    }
+                });
+            });
+            $("#unTypeAccountLoginSpan").click(function(){
+                var className = $("#unTypeAccountLoginImg").attr("class");
+                console.info("class="+className);
+                if(className =='unTypeAccountLoginDiv_rememberMe'){
+                    $("#unTypeAccountLoginImg").removeClass();
+                    $("#unTypeAccountLoginImg").addClass("unTypeAccountLoginDiv_notRememberMe");
+                    $("#rememberMe").val("0");
+                }else {
+                    $("#unTypeAccountLoginImg").removeClass();
+                    $("#unTypeAccountLoginImg").addClass("unTypeAccountLoginDiv_rememberMe");
+                    $("#rememberMe").val("1");
+                }
+            });
+        });
+
+    </script>
+</head>
+<body class=" hPC hPC">
+<div class="viewport bg_c4">
+    <!--这是顶部栏-->
+    <header class="header">
+        <a href="/mn/menu" class="hyzl">首页</a>
+        <a href="/user/register" class="hyzc">注册</a>
+        <h1>登录</h1>
+    </header>
+    <div class="main">
+        <div class="hy_login">
+            <input type="hidden" id="rememberMe" value="1">
+            <div class="hy_row login_z hy_b">
+                <i class="left"></i>
+                <input id="username" type="text" class="login_text" placeholder="请输入邮箱或手机号"></div>
+            <div class="hy_row login_m">
+                <i class="left"></i>
+                <input id="mm" type="password" class="login_text" placeholder="请输入登录密码">
+                <a href="javascript:void(0);" onclick="mm('mm')" target="_self" class="p_hide"></a>
+            </div>
+        </div>
+        <div class="clearfix p20 forget" style="padding: 1% 3%;">
+            <span id="unTypeAccountLoginSpan">
+                <div class="unTypeAccountLoginDiv">
+                    <div id="unTypeAccountLoginImg" class="unTypeAccountLoginDiv_rememberMe"></div>
+                </div>
+                <span style="float: left;line-height: 28px">记住密码</span>
+            </span>
+        </div>
+        <div class="hy_btn p20">
+            <input id="login" type="button" class="hy_button btn_red" value="登录">
+        </div>
+{#        <div class="clearfix p20">#}
+{#            <a href="/user/forgetPassword" class="forget left"><span>找回密码</span></a>#}
+{#        </div>#}
+        <div class="three">
+            <p class="color8">合作账号登录</p>
+            <div class="t_line tl_l"></div>
+            <div class="t_line tl_r"></div>
+        </div>
+        <div class="qqwx clearfix">
+            <a href="javascript:void(0)" class="qw_dl qq left">QQ登录
+                <span class="qw_icon qq_icon"></span>
+            </a>
+            <a href="javascript:void(0)" class="qw_dl wx right">微信登录
+                <span class="qw_icon wx_icon"></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
