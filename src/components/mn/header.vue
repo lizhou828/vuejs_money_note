@@ -6,7 +6,7 @@
       </router-link>
     </div>
     <div class="gomenu radius20">
-      <router-link to="/mnItem/blank">
+      <router-link :to="{path:'/mnItem/blank',query: {day: date}}">
           <img src="/static/public/images/icons/pencil.png" alt="" title=""/>
       </router-link>
     </div>
@@ -15,7 +15,19 @@
 
 <script>
 export default {
-  name: 'header'
+  name: 'header',
+  props: ['day'],
+  data () {
+    return {
+      date: this.day
+    }
+  },
+  watch: {
+    date(newValue, oldValue) {
+      console.info("公共页面头部，监测date属性：oldValue=" + oldValue +",newValue=" + newValue)
+    }
+  }
+
 }
 </script>
 

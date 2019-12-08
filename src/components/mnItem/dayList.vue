@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header></Header>
+    <Header :day="currentDate"></Header>
     <div class="swiper-container swiper-parent">
       <div class="swiper-wrapper">
 
@@ -19,6 +19,7 @@
                               v-model="currentDate"
                               type="date"
                               @change="changeDate"
+                              value-format="yyyy-MM-dd"
                               placeholder="选择日期"  style="width: 200px;border: none; background-color: #85af5d;color: #fff;font-size: 25px;line-height: 35px;" >
                           </el-date-picker>
                         </div>
@@ -93,7 +94,7 @@
     name: 'dayList',
     data() {
       return {
-        currentDate: this.$route.params.day,
+        currentDate: '',
         currentDayCountMap: {
           income: '126.35',
           pay: '63.12'
@@ -131,13 +132,13 @@
         )
       },
       changeDate(date){
-        date = formatDate(date," yyyy-MM-dd");
         this.$router.push(
           {path: '/mnItem/dayList', query: {day: date}}
         )
       }
     },
     mounted(){
+      this.currentDate = this.$route.query.day;
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
       },100)
