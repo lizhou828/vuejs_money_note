@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header :day="mnItem.note_date"></Header>
+    <Header></Header>
     <div class="swiper-container swiper-parent">
       <div class="swiper-wrapper">
         <div class="swiper-slide sliderbg">
@@ -74,8 +74,6 @@
 </template>
 
 <script>
-  import {formatDate} from '../../common/date.js';
-
   export default {
     name: 'blank',
     data() {
@@ -183,12 +181,10 @@
     },
     methods: {
       changeDate(date) {
-        this.mnItem.note_date = date
+        this.mnItem.note_date = date;
         this.$router.push(
           {path: '/mnItem/blank', query: {day: date}}
         )
-
-
       },
       changeCate(value) {
         console.log("选择完类别数据：" + value);
@@ -210,9 +206,6 @@
       }
     },
     mounted() {
-      console.info("this.mnItem.note_date=" + this.mnItem.note_date);
-      console.info("this.$route.query.day=" + this.$route.query.day);
-      this.mnItem.note_date = this.$route.query.day;
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
       }, 100)

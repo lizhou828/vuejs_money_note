@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header :day="currentDate"></Header>
+    <Header></Header>
     <div class="swiper-container swiper-parent">
       <div class="swiper-wrapper">
 
@@ -88,7 +88,6 @@
 </template>
 
 <script>
-  import {formatDate} from '../../common/date.js';
 
   export default {
     name: 'dayList',
@@ -138,7 +137,6 @@
       }
     },
     mounted(){
-      this.currentDate = this.$route.query.day;
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
       },100)
