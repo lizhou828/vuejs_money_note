@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header></Header>
+    <commonHead ></commonHead>
     <div class="swiper-container swiper-parent">
       <div class="swiper-wrapper">
         <div class="swiper-slide sliderbg">
@@ -174,6 +174,12 @@
 
       }
     },
+    watch: {
+      $route(){
+        // 监听路由参数的变化
+        this.mnItem.note_date = this.$route.query.day
+      }
+    },
     computed: {
       calc_needful() {
         return this.mnItem.needful == 'Y';
@@ -182,6 +188,7 @@
     methods: {
       changeDate(date) {
         this.mnItem.note_date = date;
+        // sessionStorage.setItem("note_date",date);
         this.$router.push(
           {path: '/mnItem/blank', query: {day: date}}
         )
@@ -206,6 +213,9 @@
       }
     },
     mounted() {
+      // if(this.mnItem.note_date =='' && this.$router.query.day != ''){
+      //   this.mnItem.note_date = this.$router.query.day
+      // }
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
       }, 100)

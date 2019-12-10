@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header></Header>
+    <commonHead></commonHead>
     <div class="swiper-container swiper-parent">
       <div class="swiper-wrapper">
 

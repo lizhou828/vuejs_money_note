@@ -1,5 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
+/**
+ * 重写vue-router路由的push方法,这样的话，在普通的html标签中触发了click时间，也能跳转路由 ，就没必要一定要用<router-link>标签了
+ */
+const routerPush = Router.prototype.push;
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+};
+
 // import HelloWorld from '@/components/HelloWorld'
 import Menu from '@/components/mn/menu'
 import userCenter from '@/components/mn/userCenter'
@@ -18,7 +27,7 @@ import incomePerMonth from '@/components/mnItem/incomePerMonth'
 import payedPerMonth from '@/components/mnItem/payedPerMonth'
 
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [

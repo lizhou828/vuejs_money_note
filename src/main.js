@@ -10,8 +10,8 @@ import '../static/public/css/idangerous.swiper.css'
 import '../static/public/css/swipebox.css'
 
 // 定义全局组件(自定义)
-import Header from '@/components/mn/header'
-Vue.component('Header',Header);
+import commonHead from '@/components/mn/commonHead'
+Vue.component('commonHead',commonHead);
 
 //引用第三方ui组件
 import ElementUI from 'element-ui';
