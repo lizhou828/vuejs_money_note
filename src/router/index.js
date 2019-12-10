@@ -20,6 +20,8 @@ import mnEventBlank from '@/components/mnEvent/blank'
 import mnEventList from '@/components/mnEvent/list'
 
 import Login from '@/components/user/login'
+import register from '@/components/user/register'
+
 
 import mnItemBlank from '@/components/mnItem/blank'
 import mnItemDayList from '@/components/mnItem/dayList'
@@ -45,6 +47,11 @@ export default new Router({
       path: '/user/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/user/register',
+      name: 'register',
+      component: register
     },
     {
       path: '/mnItem/blank',
