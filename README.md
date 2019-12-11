@@ -29,3 +29,10 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
+# 浏览器兼容性及版本要求
+  vuejs 详情请见：package.json文件中的browserslist配置项
+  axios有浏览器版本要求，详情请见：http://www.axios-js.com/docs/
+# 相关文档
+  [axios中文网](http://www.axios-js.com)

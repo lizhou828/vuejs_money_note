@@ -1,28 +1,8 @@
 import axios from 'axios'
 import QS from 'qs'; // 引入qs模块，用来序列化post类型的数据，
-// 创建axios的一个实例
-var instance = axios.create({
-  baseURL: "http://192.168.222.231:8092",
-  timeout: 30000
-});
+
+//==========================================================================================axios全局的配置==========================================================================================
 axios.defaults.timeout = 10000;
-
-// 一、请求拦截器 忽略
-instance.interceptors.request.use(function (config) {
-  return config;
-}, function (error) {
-  // 对请求错误做些什么
-  return Promise.reject(error);
-});
-// 二、响应拦截器 忽略
-instance.interceptors.response.use(function (response) {
-  return response.data;
-}, function (error) {
-  // 对响应错误做点什么
-  return Promise.reject(error);
-});
-
-
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {
   axios.defaults.baseURL = 'https://www.baidu.com';
@@ -33,79 +13,6 @@ else if (process.env.NODE_ENV == 'testing') {
 else if (process.env.NODE_ENV == 'production') {
   axios.defaults.baseURL = 'https://www.production.com';
 }
-
-export default function (method, url, data = null) {
-  method = method.toLowerCase();
-  if (method === 'post') {
-    return instance.post(url, data);
-  } else if (method === 'get') {
-    return instance.get(url, {params: data});
-  } else if (method === 'delete') {
-    return instance.delete(url, {params: data});
-  } else if (method === 'put') {
-    return instance.put(url, data);
-  } else {
-    console.error('未知的method' + method);
-    return false;
-  }
-}
-
-
-// const http = axios.create({
-//   baseURL: "http://192.168.222.231:8092",
-//   timeout: 6000
-// })
-// http request 拦截器
-// 每次请求都为http头增加Authorization字段，其内容为Token
-instance.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token');
-//console.log('tokenW2W2W2W2W2'+token);
-
-    if (token) {
-      config.headers.common['mn-Auth-Token'] = token;
-      // config.headers['token'] = token
-      // console.log("token"+token);
-    }
-    // console.log("token"+config)
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
-
-// // http response 拦截器
-// instance.interceptors.response.use(response => {
-//   let data = response.data
-//   if (data.code === 200) {
-//     return data.data
-//   }
-//   if (data.code === 401) {
-//     window.location.href = '/login'
-//   }
-//   // let msg = data.code ? data.msg : `${response.config.headers['method']} : ${data.error}`
-//   // data.message = msg
-//   return Promise.reject(data)
-// }, error => {
-//   // if (error.response) {
-//   //   switch (error.response.status) {
-//   //     case 401:
-//   //       // 这里写清除token的代码
-//   //       localStorage.removeItem(token);
-//   //       router.replace({
-//   //         path: 'login',
-//   //         query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
-//   //       })
-//   //   }
-//   // }
-//   // return Promise.reject(error.response.data)
-//   // if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
-//   //   error.msg = '请求超时，请重试'
-//   // }
-//   return Promise.reject(error)
-// })
-
 
 //响应拦截器
 axios.interceptors.response.use(
@@ -128,9 +35,10 @@ axios.interceptors.response.use(
         // 401: 未登录
         // 未登录则跳转登录页面，并携带当前页面的路径
         // 在登录成功后返回当前页面，这一步需要在登录页操作。
+        //由于前端和服务器端采用JWT的token通信，并且服务器端做了url拦截。若前端发出的请求被服务器端拦截到，则服务器端返回401，所以axios在前端无需做url拦截处理
         case 401:
           router.replace({
-            path: '/login',
+            path: '/user/login',
             query: {
               redirect: router.currentRoute.fullPath
             }
@@ -158,7 +66,7 @@ axios.interceptors.response.use(
           // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
           setTimeout(() => {
             router.replace({
-              path: '/login',
+              path: '/user/login',
               query: {
                 redirect: router.currentRoute.fullPath
               }
@@ -169,14 +77,21 @@ axios.interceptors.response.use(
         // 404请求不存在
         case 404:
           this.$message({
-            message: '网络请求不存在',
+            message: '请求url不存在',
             type: 'warning'
           });
-          // Toast({
-          // message: '网络请求不存在',
-          // duration: 1500,
-          // forbidClick: true
-          // });
+          break;
+        case 400:
+          this.$message({
+            message: '请求参数错误',
+            type: 'warning'
+          });
+          break;
+        case 500:
+          this.$message({
+            message: '服务器返回内容错误',
+            type: 'warning'
+          });
           break;
         // 其他错误，直接抛出错误提示
         default:
@@ -193,6 +108,48 @@ axios.interceptors.response.use(
       return Promise.reject(error.response);
     }
   });
+//==========================================================================================axios全局的配置==========================================================================================
+
+
+//==========================================================================================axios实例instance的配置==========================================================================================
+// 创建axios的一个实例
+var instance = axios.create({
+  baseURL: "http://192.168.222.231:8092",
+  timeout: 30000
+});
+
+// 每次请求都为http的请求头增加mn-Auth-Token字段，其内容为登录接口中返回的token值
+instance.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.common['mn-Auth-Token'] = token;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+// 一、请求拦截器 忽略
+instance.interceptors.request.use(function (config) {
+  return config;
+}, function (error) {
+  // 对请求错误做些什么
+  return Promise.reject(error);
+});
+// 二、响应拦截器 忽略
+instance.interceptors.response.use(function (response) {
+  return response.data;
+}, function (error) {
+  // 对响应错误做点什么
+  return Promise.reject(error);
+});
+
+
+
+//==========================================================================================axios实例instance的配置==========================================================================================
+
 
 /**
  * get方法，对应get请求
@@ -226,4 +183,21 @@ export function post(url, params) {
         reject(err.data)
       })
   });
+}
+
+
+export default function (method, url, data = null) {
+  method = method.toLowerCase();
+  if (method === 'post') {
+    return instance.post(url, data);
+  } else if (method === 'get') {
+    return instance.get(url, {params: data});
+  } else if (method === 'delete') {
+    return instance.delete(url, {params: data});
+  } else if (method === 'put') {
+    return instance.put(url, data);
+  } else {
+    console.error('未知的method' + method);
+    return false;
+  }
 }

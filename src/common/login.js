@@ -1,10 +1,10 @@
-import req from '../js/http.js'
- // 定义接口  
+import req from './http.js'
+ // 定义接口
  // 在这里定义了一个登陆的接口，把登陆的接口暴露出去给组件使用
 //  export const LOGIN = params => req('post', '/api/login', params);
 //  // 这里使用了箭头函数，转换一下写法：
 
- // 定义接口  
+ // 定义接口
  // 在这里定义了一个登陆的接口，把登陆的接口暴露出去给组件使用
  export const LOGIN = params => req('post', '/api/login', params);
  // 这里使用了箭头函数，转换一下写法：
