@@ -103,10 +103,9 @@ export default {
       // 2.2假设登录成功,返回的数据应该是
       // userInfo = {code:200, msg: 'success', data: {token:'xxxxx'}}
       // 然后根据返回的数据做相应的处理，比如储存token
-      // console.log("" + JSON.stringify(userInfo));
+      console.log("请求登录接口：返回的数据是：" + JSON.stringify(userInfo));
 
       if (userInfo.statusCode != 200) {
-        //iViewUi的友好提示
         this.$message({
           message: userInfo.message,
           type: 'error',
