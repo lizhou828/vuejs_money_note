@@ -17,44 +17,45 @@
                     </div>
                     <div class="mnBlank">
                       <el-form :model="mnItem" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                        <el-form-item label="记账日期" required prop="note_date">
+                        <el-form-item label="记账日期" required prop="noteDate">
                             <el-date-picker type="date" placeholder="选择日期"
-                                            v-model="mnItem.note_date"
+                                            v-model="mnItem.noteDate"
                                             @change="changeDate"
                                             value-format="yyyy-MM-dd"
                                             style="width: 100%;">
                             </el-date-picker>
                         </el-form-item>
-                        <el-form-item label="名称" required prop="item_name">
-                          <el-input v-model="mnItem.item_name"></el-input>
+                        <el-form-item label="名称" required prop="itemName">
+                          <el-input v-model.trim="mnItem.itemName"></el-input>
                         </el-form-item>
                         <el-form-item label="金额" required prop="money">
-                          <el-input v-model="mnItem.money"></el-input>
+                          <el-input v-model.number="mnItem.money"></el-input>
                         </el-form-item>
-                        <el-form-item label="类别" required prop="cate_id">
-                          <el-cascader
-                            v-model="mnItem.cate_id"
+                        <el-form-item label="类别" required prop="cateId" >
+                          <el-cascader :show-all-levels="false"
+                           children="children"
+                            v-model="mnItem.cateId"
                             :options="cateOptions"
                             @change="changeCate"></el-cascader>
                         </el-form-item>
                         <el-form-item label="是否必须" prop="needful">
-                          <el-switch v-model="mnItem.needful"></el-switch>
+                          <el-switch v-model="isNeedful"></el-switch>
                         </el-form-item>
-                        <el-form-item label="事件" prop="event_id">
-                          <el-select v-model="mnItem.event_id" placeholder="请选择">
+                        <el-form-item label="事件" prop="eventId">
+                          <el-select v-model="mnItem.eventId" placeholder="请选择">
                             <el-option
                               v-for="mnEvent in mnEventList"
-                              :key="mnEvent.event_id"
-                              :label="mnEvent.event_name"
-                              :value="mnEvent.event_id">
+                              :key="mnEvent.eventId"
+                              :label="mnEvent.eventName"
+                              :value="mnEvent.eventId">
                             </el-option>
                           </el-select>
                         </el-form-item>
                         <el-form-item label="备注" prop="remark">
-                          <el-input type="textarea" v-model="mnItem.remark"></el-input>
+                          <el-input type="textarea" v-model.trim="mnItem.remark"></el-input>
                         </el-form-item>
                         <el-form-item>
-                          <el-button type="primary" @click="saveItem('ruleForm')">保存</el-button>
+                          <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
                           <el-button @click="resetForm('ruleForm')">重置</el-button>
                           <el-button @click="deleteItem('ruleForm')" v-if="mnItem.itemId > 0">删除</el-button>
                         </el-form-item>
@@ -74,6 +75,7 @@
 </template>
 
 <script>
+  import {ITEM_DETAIL,ITEM_DELETE,ITEM_SAVE_OR_UPDATE } from "../../common/request_url";
   export default {
     name: 'blank',
     data() {
@@ -95,89 +97,49 @@
       };
       return {
         rules: {
-          item_name: [
+          itemName: [
             {required: true, message: '请输入名称', trigger: 'blur'},
             {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
           ],
           money: [
             {validator: validateMoney, trigger: 'blur'}
           ],
-          note_date: [
+          noteDate: [
             {required: true, message: '请选择记账日期', trigger: 'change'}
           ]
         },
 
+        isNeedful:false,
         isDisabled: false,
-        currentUserId: 2,
+        currentUserId: "",
         cateValue: 11,
-        mnItem: {
-          item_id: 1,
-          note_date: '',
-          user_id: 2,
-          item_name: '早餐',
-          money: 123.65,
-          cate_id: 11,
-          cate_name: '餐饮饮食',
-          parent_cate_id: 2,
-          parent_cate_name: '基本生活',
-          type: -1,
-          needful: true,
-          event_id: 2,
-          remark: "下次少买点"
-        },
-        mnEventList: [
-          {
-            event_id: 1,
-            event_name: "基本生活"
-          },
-          {
-            event_id: 2,
-            event_name: "小康生活"
-          },
-          {
-            event_id: 3,
-            event_name: "小资情调"
-          }
-
-        ],
-        cateOptions: [
-          {
-            value: 2,
-            label: '基本生活',
-            children: [
-              {
-                value: 10,
-                label: '衣帽鞋服'
-              },
-              {
-                value: 11,
-                label: '餐饮饮食'
-              }
-            ],
-          },
-          {
-            value: 3,
-            label: '交通通讯',
-            children: [
-              {
-                value: 23,
-                label: '固话费'
-              },
-              {
-                value: 22,
-                label: '手机话费'
-              }
-            ]
-
-          }
-        ]
-
+        mnItem: "",
+        mnEventList: "",
+        cateOptions: ""
       }
     },
     watch: {
-      $route(){
-        // 监听路由参数的变化
+      $route(){ // 监听路由参数的变化
         this.mnItem.note_date = this.$route.query.day
+      },
+      'mnItem.cateId':{ //监听对象的属性
+        handler:function(value){
+          if(value && value != "" && value != undefined){
+            if(value instanceof Array || value.length === 2){
+              this.mnItem.cateId = value[1];
+            }
+          }
+          // console.info("this.mnItem.cateId =" + this.mnItem.cateId );
+        }
+      },
+      isNeedful: {
+        handler:function(value){
+          if(value === true){
+            this.mnItem.needful = 'Y';
+          }else{
+            this.mnItem.needful = 'N';
+          }
+        }
       }
     },
     computed: {
@@ -197,25 +159,61 @@
         console.log("选择完类别数据：" + value);
       },
       submitForm(formName) {
-        this.isDisabled = true
+        this.isDisabled = true;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            //todo 发送请求，保存数据
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+              let responseData = ITEM_SAVE_OR_UPDATE(this.mnItem);
+              if (responseData && responseData.status === 200){
+                this.$message({
+                  message: responseData.message,
+                  type: 'success',
+                  offset:60
+                });
+                this.$router.push({path:"/mn/dayList",query:{"day":this.mnItem.note_date}})
+              }else{
+                this.$message({
+                  message: responseData.message,
+                  type: 'success',
+                  offset:60
+                });
+              }
           }
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      async initData(){
+        let responseData = await ITEM_DETAIL();
+        if (responseData && responseData.status === 200){
+          this.currentUserId =   responseData.data.currentUserId;
+          this.mnItem =   responseData.data.mnItem;
+          this.cateOptions =   responseData.data.cateOptions;
+          this.mnEventList =   responseData.data.mnEventList;
+        }
+      },
+      async deleteItem(){
+        let responseData = await ITEM_DELETE({"itemId":this.mnItem.itemId});
+        if (responseData && responseData.status === 200){
+          this.$message({
+            message: responseData.message,
+            type: 'success',
+            offset:60
+          });
+          this.$router.push({path:"/mn/dayList",query:{"day":this.mnItem.note_date}})
+        }else{
+          this.$message({
+            message: responseData.message,
+            type: 'error',
+            offset:60
+          });
+        }
       }
     },
+    created:function(){
+      this.initData();
+    },
     mounted() {
-      // if(this.mnItem.note_date =='' && this.$router.query.day != ''){
-      //   this.mnItem.note_date = this.$router.query.day
-      // }
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
       }, 100)

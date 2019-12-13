@@ -88,7 +88,7 @@
 </template>
 
 <script>
-
+  import {MN_DAY_LIST} from "../../common/request_url";
   export default {
     name: 'dayList',
     data() {
@@ -137,6 +137,13 @@
       }
     },
     mounted(){
+      let responseData = MN_DAY_LIST();
+      if (responseData && responseData.status === 200){
+        this.currentDate =   responseData.data.currentDate;
+        this.mnItemList =   responseData.data.mnItemList;
+        this.currentDayCountMap =   responseData.data.currentDayCountMap;
+      }
+
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
       },100)

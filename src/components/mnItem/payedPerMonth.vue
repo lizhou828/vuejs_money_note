@@ -110,6 +110,7 @@
 
 <script>
 import {formatDate} from "../../common/date";
+import {MN_PAYED_PER_MONTH} from "../../common/request_url";
 
 export default {
   name: 'payedPerMonth',

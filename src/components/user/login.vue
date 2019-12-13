@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import {LOGIN} from "../../common/login";
+import {LOGIN} from "../../common/request_url";
 
 export default {
   name: 'login',
@@ -96,7 +96,7 @@ export default {
     },
     // 2. 定义登录的逻辑
     async login() {
-      // 2.1 awiat LOGIN(this.user)
+      // 2.1 awiat Request_url(this.user)
       // 等待LOGIN(this.user)执行完,
       // 把返回值给userInfo
       let responseData = await LOGIN(this.user);
