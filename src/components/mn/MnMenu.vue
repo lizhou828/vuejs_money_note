@@ -42,7 +42,7 @@
 
 <script>
 export default {
-  name: 'menu'
+  name: 'MnMenu'
 }
 </script>
 

@@ -10,7 +10,7 @@ Router.prototype.push = function push(location) {
 };
 
 // import HelloWorld from '@/components/HelloWorld'
-import Menu from '@/components/mn/menu'
+import MnMenu from '@/components/mn/MnMenu'
 import userCenter from '@/components/mn/userCenter'
 import weixin from '@/components/mn/weixin'
 import contact from '@/components/mn/contact'
@@ -31,17 +31,17 @@ import payedPerMonth from '@/components/mnItem/payedPerMonth'
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
       name: '首页',
-      component: Menu
+      component: MnMenu
     },
     {
       path: '/mn/menu',
       name: '菜单页',
-      component: Menu
+      component: MnMenu
     },
     {
       path: '/user/login',
@@ -56,22 +56,34 @@ export default new Router({
     {
       path: '/mnItem/blank',
       name: 'mnItemBlank',
-      component: mnItemBlank
+      component: mnItemBlank,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      }
     },
     {
       path: '/mnItem/dayList',
       name: 'mnItemDayList',
-      component: mnItemDayList
+      component: mnItemDayList,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      }
     },
     {
       path: '/mnEvent/list',
       name: 'mnEventList',
-      component: mnEventList
+      component: mnEventList,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      }
     },
     {
       path: '/mnEvent/blank',
       name: 'mnEventBlank',
-      component: mnEventBlank
+      component: mnEventBlank,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      }
     },
 
     {
@@ -82,12 +94,18 @@ export default new Router({
     {
       path:'/mnItem/incomePerMonth',
       name:'收入汇总',
-      component:incomePerMonth
+      component:incomePerMonth,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      }
     },
     {
       path:'/mnItem/payedPerMonth',
       name:'支出汇总',
-      component:payedPerMonth
+      component:payedPerMonth,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      }
     },
 
     {
@@ -110,4 +128,23 @@ export default new Router({
 
 
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+    if (  localStorage.getItem('token')) {  // 还可以用store.state.token  通过vuex state获取当前的token是否存在
+      next();
+    }
+    else {
+      next({
+        path: '/user/login',
+        query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后再跳转到该路由
+      })
+    }
+  }
+  else {
+    next();
+  }
+});
+
+export default router;

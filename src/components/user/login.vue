@@ -12,11 +12,11 @@
 
 
                     <el-form :model="user" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                      <el-form-item label="用户名" prop="username" placeholder="请输入用户名(邮箱或手机号)">
-                        <el-input v-model="user.username"></el-input>
+                      <el-form-item label="用户名" prop="userName" placeholder="请输入用户名(邮箱或手机号)">
+                        <el-input v-model="user.userName"></el-input>
                       </el-form-item>
-                      <el-form-item label="密码" prop="pass">
-                        <el-input type="password" v-model="user.pass" autocomplete="off"></el-input>
+                      <el-form-item label="密码" prop="password">
+                        <el-input type="password" v-model="user.password" autocomplete="off"></el-input>
                       </el-form-item>
                       <el-form-item>
                         <el-button type="primary" plain @click="submitForm('ruleForm')">登陆</el-button>
@@ -45,7 +45,7 @@ export default {
   data() {
     var checkUsername = (rule, value, callback) => {
       // console.info("rule="+rule+",输入的用户名是：value=" +value + ',callback=' + callback);
-      console.info("输入的用户名是：value=" +value );
+      // console.info("输入的用户名是：value=" +value );
       if (!value || value ==='' || value === undefined ) {
         return callback(new Error('用户名不能为空'));
       }else if(value.length <2 || value.length > 20){
@@ -55,7 +55,7 @@ export default {
       }
     };
     var validatePass = (rule, value, callback) => {
-      console.info("输入的密码是：value=" +value);
+      // console.info("输入的密码是：value=" +value);
       if (!value || value ==='' || value === undefined ) {
         return callback(new Error('请输入密码'));
       }else if(value.length <2 || value.length > 20){
@@ -67,14 +67,14 @@ export default {
 
     return {
       user: {
-        pass: '',
-        username: ''
+        password: '',
+        userName: ''
       },
       rules: {
-        pass: [
+        password: [
           { validator: validatePass, trigger: 'blur' }
         ],
-        username: [
+        userName: [
           { validator: checkUsername, trigger: 'blur' }
         ]
       }
@@ -99,25 +99,37 @@ export default {
       // 2.1 awiat LOGIN(this.user)
       // 等待LOGIN(this.user)执行完,
       // 把返回值给userInfo
-      let userInfo = await LOGIN(this.user);
+      let responseData = await LOGIN(this.user);
       // 2.2假设登录成功,返回的数据应该是
       // userInfo = {code:200, msg: 'success', data: {token:'xxxxx'}}
       // 然后根据返回的数据做相应的处理，比如储存token
-      console.log("请求登录接口：返回的数据是：" + JSON.stringify(userInfo));
+      // console.log("请求登录接口：返回的数据是：" + JSON.stringify(userInfo));
 
-      if (userInfo.statusCode != 200) {
+      if (responseData.status != 200) {
         this.$message({
-          message: userInfo.message,
+          message: responseData.message,
           type: 'error',
           offset:60
         });
         //登录成功
-      } else if (userInfo.data != null) {
-        localStorage.setItem('token', userInfo.data.token);
+      } else if (responseData.data != null) {
+        localStorage.setItem('token', responseData.data.token);
+        localStorage.setItem('userId', responseData.data.userId);
+        localStorage.setItem('userName', responseData.data.userName);
         //  console.log("222" + JSON.stringify(userInfo.data.token));
-        this.$router.push("/");
+        this.$message({
+          message: "登录成功!",
+          type: 'success',
+          offset:60
+        });
+        let redirect = this.$route.query.redirect;
+        if(!redirect || redirect === "" || redirect === undefined){
+          this.$router.push("/");
+        }else{
+          this.$router.push(redirect);
+        }
       } else {
-        this.$message.error(userInfo.message);
+        this.$message.error(responseData.message);
       }
     },
   },
