@@ -17,7 +17,7 @@
                     </div>
                     <div class="mnBlank">
                       <el-form :model="mnItem" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                        <el-form-item label="记账日期" required prop="noteDate">
+                        <el-form-item label="记账日期"  prop="noteDate">
                             <el-date-picker type="date" placeholder="选择日期"
                                             v-model="mnItem.noteDate"
                                             @change="changeDate"
@@ -25,13 +25,13 @@
                                             style="width: 100%;">
                             </el-date-picker>
                         </el-form-item>
-                        <el-form-item label="名称" required prop="itemName">
+                        <el-form-item label="名称"  prop="itemName">
                           <el-input v-model.trim="mnItem.itemName"></el-input>
                         </el-form-item>
-                        <el-form-item label="金额" required prop="money">
+                        <el-form-item label="金额"  prop="money">
                           <el-input v-model.number="mnItem.money"></el-input>
                         </el-form-item>
-                        <el-form-item label="类别" required prop="cateId" >
+                        <el-form-item label="类别"  prop="cateId" >
                           <el-cascader :show-all-levels="false"
                            children="children"
                             v-model="mnItem.cateId"
@@ -82,17 +82,17 @@
       // 自定义校验金额
       var validateMoney = (rule, value, callback) => {
         if (!value) {
-          callback(new Error('必须输入金额'))
+          return  callback(new Error('必须输入金额'))
         }
         value = Number(value);
         if (typeof value === 'number' && !isNaN(value)) {
           if (value < 0 || value > 100000000) {
-            callback(new Error('金额范围在 0 至 1亿 之间'))
+            return  callback(new Error('金额范围在 0 至 1亿 之间'))
           } else {
-            callback()
+            return callback()
           }
         } else {
-          callback(new Error('金额必须为数字'))
+          return callback(new Error('金额必须为数字'))
         }
       };
       return {
@@ -102,7 +102,7 @@
             {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
           ],
           money: [
-            {validator: validateMoney, trigger: 'blur'}
+            {required: true,validator: validateMoney, trigger: 'blur'}
           ],
           noteDate: [
             {required: true, message: '请选择记账日期', trigger: 'change'}
@@ -113,9 +113,9 @@
         isDisabled: false,
         currentUserId: "",
         cateValue: 11,
-        mnItem: "",
-        mnEventList: "",
-        cateOptions: ""
+        mnItem: {},
+        mnEventList: [],
+        cateOptions: []
       }
     },
     watch: {
@@ -156,29 +156,36 @@
         )
       },
       changeCate(value) {
-        console.log("选择完类别数据：" + value);
+        // console.log("选择完类别数据：" + value);
       },
       submitForm(formName) {
         this.isDisabled = true;
-        this.$refs[formName].validate((valid) => {
+        let valid = this.$refs[formName].validate((valid) => {
           if (valid) {
-              let responseData = ITEM_SAVE_OR_UPDATE(this.mnItem);
-              if (responseData && responseData.status === 200){
-                this.$message({
-                  message: responseData.message,
-                  type: 'success',
-                  offset:60
-                });
-                this.$router.push({path:"/mn/dayList",query:{"day":this.mnItem.note_date}})
-              }else{
-                this.$message({
-                  message: responseData.message,
-                  type: 'success',
-                  offset:60
-                });
-              }
+            this.save_or_update()
+          } else {
+            console.log('保存失败！');
+            return false;
           }
         });
+      },
+      async save_or_update(){
+        let responseData = await ITEM_SAVE_OR_UPDATE(this.mnItem);
+        console.info("返回数据：" + responseData + ",data="+ responseData.data);
+        if (responseData && responseData.status === 200){
+          this.$message({
+            message: responseData.message,
+            type: 'success',
+            offset:60
+          });
+          this.$router.push({path:"/mnItem/dayList",query:{"day":this.mnItem.note_date}})
+        }else{
+          this.$message({
+            message: responseData.message,
+            type: 'success',
+            offset:60
+          });
+        }
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

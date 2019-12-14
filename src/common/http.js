@@ -3,9 +3,10 @@ import QS from 'qs'; // 引入qs模块，用来序列化post类型的数据，
 
 //==========================================================================================axios全局的配置==========================================================================================
 axios.defaults.timeout = 10000;
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'https://www.baidu.com';
+  axios.defaults.baseURL = 'http://192.168.1.104:8087';
 }
 else if (process.env.NODE_ENV == 'testing') {
   axios.defaults.baseURL = 'https://www.ceshi.com';
@@ -112,14 +113,10 @@ axios.interceptors.response.use(
 
 
 //==========================================================================================axios实例instance的配置==========================================================================================
-// 创建axios的一个实例
-var instance = axios.create({
-  baseURL: "http://192.168.222.17:8087",
-  timeout: 30000
-});
+
 
 // 每次请求都为http的请求头增加mn-Auth-Token字段，其内容为登录接口中返回的token值
-instance.interceptors.request.use(
+axios.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -131,20 +128,6 @@ instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-// 一、请求拦截器 忽略
-instance.interceptors.request.use(function (config) {
-  return config;
-}, function (error) {
-  // 对请求错误做些什么
-  return Promise.reject(error);
-});
-// 二、响应拦截器 忽略
-instance.interceptors.response.use(function (response) {
-  return response.data;
-}, function (error) {
-  // 对响应错误做点什么
-  return Promise.reject(error);
-});
 
 
 
@@ -175,7 +158,7 @@ export function get(url, params) {
  */
 export function post(url, params) {
   return new Promise((resolve, reject) => {
-    axios.post(url, QS.stringify(params))
+    axios.post(url, params)
       .then(res => {
         resolve(res.data);
       })
@@ -186,18 +169,4 @@ export function post(url, params) {
 }
 
 
-export default function (method, url, data = null) {
-  method = method.toLowerCase();
-  if (method === 'post') {
-    return instance.post(url, data);
-  } else if (method === 'get') {
-    return instance.get(url, {params: data});
-  } else if (method === 'delete') {
-    return instance.delete(url, {params: data});
-  } else if (method === 'put') {
-    return instance.put(url, data);
-  } else {
-    console.error('未知的method' + method);
-    return false;
-  }
-}
+
