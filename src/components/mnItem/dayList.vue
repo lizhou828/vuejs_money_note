@@ -98,7 +98,18 @@
         mnItemList: []
       }
     },
-
+    watch: {
+      $route(){ // 监听路由参数的变化
+        this.currentDate = this.$route.query.day;
+        let responseData = MN_DAY_LIST({"day":this.$route.query.day});
+        if (responseData && responseData.status === 200){
+          this.currentDate =   responseData.data.currentDate;
+          this.mnItemList =   responseData.data.mnItemList;
+          this.currentDayCountMap =   responseData.data.currentDayCountMap;
+        }
+        console.info("this.currentDate=" + this.currentDate)
+      },
+    },
     methods: {
       editItemDetail(item_id) {
         this.$router.push(
@@ -106,16 +117,20 @@
         )
       },
       changeDate(date){
-        this.$router.push(
-          {path: '/mnItem/dayList', query: {day: date}}
-        )
+        console.info("改变后的日期：" + date);
+        this.$router.push({path: '/mnItem/dayList', query: {"day":date}});
+        this.getDataByDate(date)
       },
       async initData(){
-        let responseData = await MN_DAY_LIST();
+        await this.getDataByDate(this.currentDate)
+      },
+      async getDataByDate(date){
+        let _this = this;
+        let responseData = await MN_DAY_LIST({"day":date});
         if (responseData && responseData.status === 200){
-          this.currentDate =   responseData.data.currentDate;
-          this.mnItemList =   responseData.data.mnItemList;
-          this.currentDayCountMap =   responseData.data.currentDayCountMap;
+          _this.currentDate =   responseData.data.currentDate;
+          _this.mnItemList =   responseData.data.mnItemList;
+          _this.currentDayCountMap =   responseData.data.currentDayCountMap;
         }
       }
     },

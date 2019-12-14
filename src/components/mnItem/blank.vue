@@ -29,7 +29,7 @@
                           <el-input v-model.trim="mnItem.itemName"></el-input>
                         </el-form-item>
                         <el-form-item label="金额"  prop="money">
-                          <el-input v-model.number="mnItem.money"></el-input>
+                          <el-input v-model.trim="mnItem.money"></el-input>
                         </el-form-item>
                         <el-form-item label="类别"  prop="cateId" >
                           <el-cascader :show-all-levels="false"
@@ -84,6 +84,11 @@
         if (!value) {
           return  callback(new Error('必须输入金额'))
         }
+        var doubleReg = /^[0-9]+([.]{1}[0-9]{1,2})?$/;
+        if (!doubleReg.test(value)) {
+          return callback(new Error("请输入合法金额(最多保留2位小数)!"));
+        }
+
         value = Number(value);
         if (typeof value === 'number' && !isNaN(value)) {
           if (value < 0 || value > 100000000) {
@@ -153,7 +158,7 @@
     },
     methods: {
       changeDate(date) {
-        this.mnItem.note_date = date;
+        this.mnItem.noteDate = date;
         // sessionStorage.setItem("note_date",date);
         this.$router.push(
           {path: '/mnItem/blank', query: {day: date}}

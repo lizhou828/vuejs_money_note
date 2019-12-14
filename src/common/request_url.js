@@ -22,8 +22,8 @@ export const ITEM_DETAIL = params => get( '/mnItem/detail', params);
 export const ITEM_DELETE = params => get( '/mnItem/delete', params);
 export const ITEM_SAVE_OR_UPDATE = params => post('/mnItem/saverOrUpdate', params);
 
-export const MN_PAYED_PER_MONTH = params => post( '/mn/payedPerMonth', params);
-export const MN_INCOME_PER_MONTH = params => post( '/mn/incomePerMonth', params);
-export const MN_DAY_LIST= params => post( '/mn/dayList', params);
+export const MN_PAYED_PER_MONTH = params => get( '/mnItem/payedPerMonth', params);
+export const MN_INCOME_PER_MONTH = params => get( '/mnItem/incomePerMonth', params);
+export const MN_DAY_LIST= params => get( '/mnItem/dayList', params);
 
 
