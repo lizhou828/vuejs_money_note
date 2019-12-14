@@ -57,7 +57,7 @@
                         <el-form-item>
                           <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
                           <el-button @click="resetForm('ruleForm')">重置</el-button>
-                          <el-button @click="deleteItem('ruleForm')" v-if="mnItem.itemId > 0">删除</el-button>
+                          <el-button @click="deleteItem('ruleForm')" v-show="mnItem.itemId > 0">删除</el-button>
                         </el-form-item>
                       </el-form>
                     </div>
@@ -120,7 +120,7 @@
     },
     watch: {
       $route(){ // 监听路由参数的变化
-        this.mnItem.note_date = this.$route.query.day
+        this.mnItem.note_date = this.$route.query.day;
       },
       'mnItem.cateId':{ //监听对象的属性
         handler:function(value){
@@ -129,7 +129,6 @@
               this.mnItem.cateId = value[1];
             }
           }
-          // console.info("this.mnItem.cateId =" + this.mnItem.cateId );
         }
       },
       isNeedful: {
@@ -139,6 +138,11 @@
           }else{
             this.mnItem.needful = 'N';
           }
+        }
+      },
+      'mnItem.needful':{
+        handler:function(value){
+          this.isNeedful = value === "Y";
         }
       }
     },
@@ -191,7 +195,7 @@
         this.$refs[formName].resetFields();
       },
       async initData(){
-        let responseData = await ITEM_DETAIL();
+        let responseData = await ITEM_DETAIL({"itemId":this.$route.query.itemId});
         if (responseData && responseData.status === 200){
           this.currentUserId =   responseData.data.currentUserId;
           this.mnItem =   responseData.data.mnItem;
@@ -207,7 +211,7 @@
             type: 'success',
             offset:60
           });
-          this.$router.push({path:"/mn/dayList",query:{"day":this.mnItem.note_date}})
+          this.$router.push({path:"/mnItem/dayList",query:{"day":this.mnItem.noteDate}})
         }else{
           this.$message({
             message: responseData.message,

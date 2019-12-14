@@ -30,15 +30,15 @@
                           <a href="javascript:void(0)" class="post_more"></a>
                           <div class="post_right_reveal">
                             <h4>
-                                                    <span>收入：
-                                                        <span
-                                                          class="money_green_color">{{currentDayCountMap.income}}</span>
-                                                    </span>
+                                  <span>收入：
+                                      <span
+                                        class="money_green_color">{{currentDayCountMap.income}}</span>
+                                  </span>
                             </h4>
                             <h4>
-                                                    <span>支出：
-                                                        <span class="money_red_color">{{currentDayCountMap.pay}}</span>
-                                                    </span>
+                                  <span>支出：
+                                      <span class="money_red_color">{{currentDayCountMap.pay}}</span>
+                                  </span>
                             </h4>
                           </div>
                           <div class="post_left">
@@ -48,7 +48,7 @@
                           </div>
                         </li>
 
-                        <li class="post" v-for="mnItem in  mnItemList " @click="editItemDetail(mnItem.item_id)">
+                        <li class="post" v-for="mnItem in  mnItemList " @click="editItemDetail(mnItem.itemId)">
                           <a href="javascript:void(0)" class="post_more"></a>
                           <div class="post_right_reveal">
                             <h4>
@@ -59,8 +59,8 @@
                                   </span>
                               </span>
                             </h4>
-                            <h4><span>名称：{{mnItem.item_name}}</span></h4>
-                            <h4><span>时间：{{mnItem.create_time}}</span></h4>
+                            <h4><span>名称：{{mnItem.itemName}}</span></h4>
+                            <h4><span>时间：{{mnItem.updateTime && mnItem.updateTime != undefined && mnItem.updateTime != "" ? mnItem.updateTime : mnItem.createTime}}</span></h4>
                           </div>
                           <div class="post_left">
                             <div :class="{'container_green':mnItem.type == 1 , 'container_red':mnItem.type == -1}">
@@ -94,56 +94,35 @@
     data() {
       return {
         currentDate: '',
-        currentDayCountMap: {
-          income: '126.35',
-          pay: '63.12'
-        },
-        mnItemList: [
-          {
-            item_id: 1,
-            item_name: '早餐',
-            money: '6',
-            create_time: '2019-12-06',
-            type: -1
-          },
-          {
-            item_id: 2,
-            item_name: '中餐',
-            money: '18',
-            create_time: '2019-12-06',
-            type: -1
-          },
-          {
-            item_id: 3,
-            item_name: '晚餐',
-            money: '31',
-            create_time: '2019-12-06',
-            type: -1
-          }
-        ]
+        currentDayCountMap: {},
+        mnItemList: []
       }
     },
 
     methods: {
       editItemDetail(item_id) {
         this.$router.push(
-          {path: '/mnItem/blank', query: {item_id: item_id}}
+          {path: '/mnItem/blank', query: {itemId: item_id}}
         )
       },
       changeDate(date){
         this.$router.push(
           {path: '/mnItem/dayList', query: {day: date}}
         )
+      },
+      async initData(){
+        let responseData = await MN_DAY_LIST();
+        if (responseData && responseData.status === 200){
+          this.currentDate =   responseData.data.currentDate;
+          this.mnItemList =   responseData.data.mnItemList;
+          this.currentDayCountMap =   responseData.data.currentDayCountMap;
+        }
       }
     },
+    created:function(){
+      this.initData();
+    },
     mounted(){
-      let responseData = MN_DAY_LIST();
-      if (responseData && responseData.status === 200){
-        this.currentDate =   responseData.data.currentDate;
-        this.mnItemList =   responseData.data.mnItemList;
-        this.currentDayCountMap =   responseData.data.currentDayCountMap;
-      }
-
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
       },100)
