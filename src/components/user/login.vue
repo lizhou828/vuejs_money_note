@@ -18,10 +18,10 @@
                       <el-form-item label="密码" prop="password">
                         <el-input type="password" v-model="user.password" autocomplete="off"></el-input>
                       </el-form-item>
-                      <el-form-item>
-                        <el-button type="primary" plain @click="submitForm('ruleForm')">登陆</el-button>
-                        <el-button type="success" plain >注册</el-button>
-                        <el-button type="danger" plain >找回密码</el-button>
+                      <el-form-item style="margin-left: -60px">
+                        <el-button type="primary" plain size="small"  @click="submitForm('ruleForm')">登陆</el-button>
+                        <el-button type="success" plain size="small">注册</el-button>
+                        <el-button type="danger" plain size="small">找回密码</el-button>
                       </el-form-item>
                     </el-form>
 
