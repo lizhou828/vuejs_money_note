@@ -34,21 +34,21 @@
                               <h4>
                                                         <span>收入：
                                                             <span style="color:green" >
-                                                                {{currentMonthSumMap.income}}
+                                                                {{currentMonthSumMap.income|currency('￥')}}
                                                             </span>
                                                         </span>
                               </h4>
                               <h4>
                                                         <span>支出：
                                                             <span style="color:red" >
-                                                                {{currentMonthSumMap.pay}}
+                                                                {{currentMonthSumMap.pay|currency('￥')}}
                                                             </span>
                                                         </span>
                               </h4>
                               <h4>
                                                         <span>结余：
                                                             <span style="color:black" >
-                                                                {{currentMonthSumMap.left}}
+                                                                {{currentMonthSumMap.left|currency('￥')}}
                                                             </span>
                                                         </span>
                               </h4>
@@ -63,10 +63,10 @@
 
 
                           <li class="post"  v-for="mn in mnItemList">
-                            <router-link class="post_more" :to="{path:'/mnItem/dayList',query:{day:mn.note_date}}">
-                            </router-link>
+                            <a class="post_more" @click="to_day_list(mn.noteDate)">
+                            </a>
                             <div class="post_right_reveal">
-                              <h4><span style="color:green">总收入 : &yen; {{mn.money}}</span></h4>
+                              <h4><span style="color:green">总收入 : {{mn.money|currency('￥')}}</span></h4>
                             </div>
                             <div class="post_left">
                               <span class="day">{{mn.day}}</span>
@@ -99,35 +99,39 @@ export default {
   name: 'incomePerMonth',
   data() {
     return {
-      note_date: '',
-      month:'2019-12',
-      currentMonthSumMap:{
-        income:126.36,
-        pay:32.65,
-        left:this.income-this.pay
-      },
-      mnItemList:[{
-        note_date:'2019-12-01',
-        money:162.65,
-        day:"01",
-        month:"12"
-      },
-        {
-          note_date:'2019-12-02',
-          money:224.24,
-          day:"02",
-          month:"12"
-
-        }
-      ]
+      month:'',
+      currentMonthSumMap:{},
+      mnItemList:[]
     }
   },
   methods: {
     changeMonth(month) {
       this.$router.push(
         {path: '/mnItem/incomePerMonth', query: {month: month}}
-      )
+      );
+      this.getDataByMonth(month)
+    },
+    to_day_list(noteDate){
+      localStorage.setItem("query_note_date",noteDate);
+      this.$router.push({path:'/mnItem/dayList',query:{day:noteDate}});
+    },
+    async initData(){
+      let month = formatDate(new Date(), "yyyy-MM");
+      await this.getDataByMonth(month)
+    },
+    async  getDataByMonth(month){
+      let _this = this;
+      let responseData = await MN_INCOME_PER_MONTH({"month":month});
+      if (responseData && responseData.status === 200){
+        _this.month = responseData.data.month;
+        _this.currentMonthSumMap = responseData.data.currentMonthSumMap;
+        _this.mnItemList = responseData.data.mnItemList;
+      }
     }
+  },
+
+  created:function(){
+    this.initData();
   },
   mounted() {
     setTimeout(function () {

@@ -101,12 +101,13 @@
     watch: {
       $route(){ // 监听路由参数的变化
         this.currentDate = this.$route.query.day;
-        let responseData = MN_DAY_LIST({"day":this.$route.query.day});
+        let responseData = MN_DAY_LIST({"day":this.currentDate});
         if (responseData && responseData.status === 200){
           this.currentDate =   responseData.data.currentDate;
           this.mnItemList =   responseData.data.mnItemList;
           this.currentDayCountMap =   responseData.data.currentDayCountMap;
         }
+        localStorage.setItem("query_note_date",this.currentDate);
         console.info("this.currentDate=" + this.currentDate)
       },
     },
@@ -118,11 +119,16 @@
       },
       changeDate(date){
         console.info("改变后的日期：" + date);
+        localStorage.setItem("query_note_date",date);
         this.$router.push({path: '/mnItem/dayList', query: {"day":date}});
         this.getDataByDate(date)
       },
       async initData(){
-        await this.getDataByDate(this.currentDate)
+        let date = this.currentDate;
+        if(!date || date === '' || date === undefined){
+          date = localStorage.getItem("query_note_date")
+        }
+        await this.getDataByDate(date)
       },
       async getDataByDate(date){
         let _this = this;
