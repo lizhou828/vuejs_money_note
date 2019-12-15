@@ -20,15 +20,15 @@
                           <div class="table_section">事件名称</div>
                           <div class="table_section_last">总支出</div>
                         </li>
-                        <li class="table_row" style="cursor: pointer" v-for="(mnEvent,index) in mnEventList" @click="detailPage(mnEvent.event_id)">
-                          <div class="table_section_small"> {{index }}</div>
-                          <div class="table_section">{{mnEvent.event_name}}</div>
+                        <li class="table_row" style="cursor: pointer" v-for="(mnEvent,index) in mnEventList" @click="detailPage(mnEvent.eventId)">
+                          <div class="table_section_small"> {{index+1 }}</div>
+                          <div class="table_section">{{mnEvent.eventName}}</div>
                           <div class="table_section_last">
-                            &yen;{{mnEvent.moneyCount ? mnEvent.moneyCount : 0}}
+                            {{mnEvent.moneyCount|currency('￥')}}
                           </div>
                         </li>
                       </ul>
-                      <router-link to="/mnEvent/blank"  class="form_submit button_12 blue blue_borderbottom radius4" style="width:100%">新建事件</router-link>
+                      <a @click="newEvent" class="form_submit button_12 blue blue_borderbottom radius4" style="width:100%">新建事件</a>
                       <div class="clearfix"></div>
                       <div class="scrolltop radius20"><a href="#"><img src="/static/public/images/icons/top.png" alt="Go on top" title="Go on top" /></a></div>
                     </div>
@@ -45,26 +45,33 @@
 </template>
 
 <script>
+  import {EVENT_LIST} from "../../common/request_url";
 export default {
   name: 'list',
   data() {
     return {
-      mnEventList: [{
-        event_id:1,
-        event_name:'结婚',
-        moneyCount:10136
-      },
-      {
-        event_id:2,
-        event_name:'李俊辉',
-        moneyCount:53265
-      }]
+      mnEventList: []
     }
   },
   methods: {
     detailPage(event_id) {
-      this.$router.push({path:'/mnEvent/blank',query:{id:event_id}})
+      this.$router.push({path:'/mnEvent/blank',query:{id:event_id}});
+      localStorage.setItem("query_event_id",event_id);
+    },
+    newEvent(){
+      this.$router.push({path:'/mnEvent/blank'});
+      localStorage.setItem("query_event_id","");
+    },
+    async initData(){
+      let _this = this;
+      let responseData = await EVENT_LIST();
+      if (responseData && responseData.status === 200){
+        _this.mnEventList = responseData.data;
+      }
     }
+  },
+  created:function(){
+    this.initData();
   },
   mounted(){
     setTimeout(function () {
