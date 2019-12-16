@@ -22,7 +22,7 @@
                           <el-input type="password" v-model.trim="user.checkPass" autocomplete="off" placeholder="请再次输入密码" ></el-input>
                         </el-form-item>
                         <el-form-item>
-                          <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+                          <el-button type="primary" :disabled="isDisabled" @click="submitForm('ruleForm')">注册</el-button>
                           <el-button @click="resetForm('ruleForm')">重置</el-button>
 
                         </el-form-item>
@@ -80,6 +80,7 @@ export default {
       }
     };
     return {
+      isDisabled: false,
       user: {
         password: '',
         checkPass: '',
@@ -100,8 +101,10 @@ export default {
   },
   methods: {
     submitForm(formName) {
+      let _this = this;
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          _this.isDisabled = true;
           this.doRegister()
         } else {
           return false;
@@ -109,6 +112,7 @@ export default {
       });
     },
     async doRegister(){
+        let _this = this;
         let responseData = await REGISTER({"userName":this.user.userName,"password":this.user.password});
         if (responseData && responseData.status === 200){
           if(responseData.data){
@@ -123,9 +127,10 @@ export default {
           });
           this.$router.push({path:"/mnItem/dayList"})
         }else{
+          _this.isDisabled = false;
           this.$message({
             message: responseData.message,
-            type: 'success',
+            type: 'error',
             offset:60
           });
         }

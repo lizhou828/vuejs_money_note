@@ -168,9 +168,10 @@
         // console.log("选择完类别数据：" + value);
       },
       submitForm(formName) {
-        this.isDisabled = true;
-        let valid = this.$refs[formName].validate((valid) => {
+        let _this = this;
+        this.$refs[formName].validate((valid) => {
           if (valid) {
+            _this.isDisabled = true;
             this.save_or_update()
           } else {
             console.log('保存失败！');
@@ -179,6 +180,7 @@
         });
       },
       async save_or_update(){
+        let _this = this;
         let responseData = await ITEM_SAVE_OR_UPDATE(this.mnItem);
         console.info("返回数据：" + responseData + ",data="+ responseData.data);
         if (responseData && responseData.status === 200){
@@ -189,9 +191,10 @@
           });
           this.$router.push({path:"/mnItem/dayList",query:{"day":this.mnItem.note_date}})
         }else{
+          _this.isDisabled = false;
           this.$message({
             message: responseData.message,
-            type: 'success',
+            type: 'error',
             offset:60
           });
         }
