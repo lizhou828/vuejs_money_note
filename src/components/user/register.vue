@@ -22,9 +22,8 @@
                           <el-input type="password" v-model.trim="user.checkPass" autocomplete="off" placeholder="请再次输入密码" ></el-input>
                         </el-form-item>
                         <el-form-item>
-                          <el-button type="primary" :disabled="isDisabled" @click="submitForm('ruleForm')">注册</el-button>
-                          <el-button @click="resetForm('ruleForm')">重置</el-button>
-
+                          <el-button type="primary" plain size="small" :disabled="isDisabled" @click="submitForm('ruleForm')">注册</el-button>
+                          <el-button type="success" plain size="small" @click="resetForm('ruleForm')">重置</el-button>
                         </el-form-item>
                       </el-form>
 
