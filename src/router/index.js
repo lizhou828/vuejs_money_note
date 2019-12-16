@@ -11,7 +11,6 @@ Router.prototype.push = function push(location) {
 
 // import HelloWorld from '@/components/HelloWorld'
 import MnMenu from '@/components/mn/MnMenu'
-import userCenter from '@/components/mn/userCenter'
 import weixin from '@/components/mn/weixin'
 import contact from '@/components/mn/contact'
 import setting from '@/components/mn/setting'
@@ -21,7 +20,7 @@ import mnEventList from '@/components/mnEvent/list'
 
 import Login from '@/components/user/login'
 import register from '@/components/user/register'
-
+import userCenter from '@/components/user/userCenter'
 
 import mnItemBlank from '@/components/mnItem/blank'
 import mnItemDayList from '@/components/mnItem/dayList'
@@ -87,7 +86,7 @@ const router = new Router({
     },
 
     {
-      path:'/mn/userCenter',
+      path:'/user/userCenter',
       name:'个人中心',
       component:userCenter
     },

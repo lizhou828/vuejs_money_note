@@ -11,7 +11,7 @@
                   <div class="logo"><a href="#">记账本</a></div>
                   <div class="menu">
                     <ul>
-                      <li><router-link to="/mn/userCenter"><img src="/static/public/images/icons/about.png" alt="" title="" /><span>个人中心</span></router-link></li>
+                      <li><router-link to="/user/userCenter"><img src="/static/public/images/icons/about.png" alt="" title="" /><span>个人中心</span></router-link></li>
                       <li><router-link to="/mnItem/blank"><img src="/static/public/images/icons/pencil.png" alt="" title="" /><span>记账</span></router-link></li>
                       <li><router-link to="/mnItem/dayList"><img src="/static/public/images/icons/docs.png" alt="" title="" /><span>账本</span></router-link></li>
 

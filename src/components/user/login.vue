@@ -20,9 +20,11 @@
                       </el-form-item>
                       <el-form-item style="margin-left: -60px">
                         <el-button type="primary" plain size="small"  @click="submitForm('ruleForm')">登陆</el-button>
+
                         <router-link to="/user/register">
                           <el-button type="success" plain size="small">注册</el-button>
                         </router-link>
+
                         <!--<el-button type="danger" plain size="small">找回密码</el-button>-->
                       </el-form-item>
                     </el-form>

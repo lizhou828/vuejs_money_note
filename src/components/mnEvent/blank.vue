@@ -32,9 +32,9 @@
                             <el-input  v-model="mnEvent.moneyCount"></el-input>
                           </el-form-item>
                           <el-form-item>
-                            <el-button type="primary" :disabled="isDisabled" @click="submitForm('ruleForm')">保存</el-button>
-                            <el-button @click="resetForm('ruleForm')">重置</el-button>
-                            <el-button @click="deleteEvent('ruleForm')" v-if="mnEvent && mnEvent.eventId  > 0">删除</el-button>
+                            <el-button type="primary" plain size="small"  :disabled="isDisabled" @click="submitForm('ruleForm')">保存</el-button>
+                            <el-button type="success" plain size="small" @click="resetForm('ruleForm')">重置</el-button>
+                            <el-button type="danger" plain size="small" @click="deleteEvent('ruleForm')" v-if="mnEvent && mnEvent.eventId  > 0">删除</el-button>
                           </el-form-item>
                         </el-form>
 
