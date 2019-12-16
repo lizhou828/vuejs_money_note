@@ -11,15 +11,15 @@
                     <div class="pages_container">
 
 
-                      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                        <el-form-item label="用户名" prop="username" placeholder="请输入用户名(邮箱或手机号)">
-                          <el-input v-model.number="ruleForm.username"></el-input>
+                      <el-form :model="user" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                        <el-form-item label="用户名" prop="userName">
+                          <el-input v-model.trim="user.userName" placeholder="用户名为邮箱或手机号"></el-input>
                         </el-form-item>
-                        <el-form-item label="密码" prop="pass">
-                          <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+                        <el-form-item label="密码" prop="password">
+                          <el-input type="password" v-model.trim="user.password" autocomplete="off"  placeholder="长度为6-20位"></el-input>
                         </el-form-item>
                         <el-form-item label="确认密码" prop="checkPass">
-                          <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+                          <el-input type="password" v-model.trim="user.checkPass" autocomplete="off" placeholder="请再次输入密码" ></el-input>
                         </el-form-item>
                         <el-form-item>
                           <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
@@ -41,59 +41,59 @@
 </template>
 
 <script>
+import {REGISTER} from "../../common/request_url";
+import {isEmail,isMobileNumber} from "../../common/str_utils";
 export default {
   name: 'register',
   data() {
-    var checkUsername = (rule, value, callback) => {
-      if (!value) {
+    var checkUserName = (rule, value, callback) => {
+      if (!value || value === ''|| value === undefined) {
         return callback(new Error('用户名不能为空'));
       }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入用户名'));
-        } else {
-          if (value < 18) {
-            callback(new Error('用户名字符长度范围为2-20'));
-          } else {
-            callback();
-          }
-        }
-      }, 1000);
-    };
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
+      if (value.length > 20) {
+        return callback(new Error('用户名最大字符长度为20'));
+      }
+      if(!isEmail(value) && !isMobileNumber(value)) {
+        return callback(new Error('用户名必须是邮箱或手机号'));
       } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
-        }
-        callback();
+        return callback();
       }
     };
+    var validatePass = (rule, value, callback) => {
+      if (!value || value === ''|| value === undefined) {
+        return callback(new Error('请输入密码'));
+      }
+
+      if (value.length < 6 || value.length > 20) {
+        return callback(new Error('密码长度为6-20位'));
+      }
+      return callback();
+
+    };
     var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error('两次输入密码不一致!'));
+      if (!value || value === ''|| value === undefined) {
+        return callback(new Error('请再次输入密码'));
+      } else if (value !== this.user.password) {
+        return callback(new Error('两次输入密码不一致!'));
       } else {
-        callback();
+        return callback();
       }
     };
     return {
-      ruleForm: {
-        pass: '',
+      user: {
+        password: '',
         checkPass: '',
-        username: ''
+        userName: ''
       },
       rules: {
-        pass: [
+        password: [
           { validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
           { validator: validatePass2, trigger: 'blur' }
         ],
-        username: [
-          { validator: checkUsername, trigger: 'blur' }
+        userName: [
+          { validator: checkUserName, trigger: 'blur' }
         ]
       }
     };
@@ -102,12 +102,33 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          this.doRegister()
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
+    },
+    async doRegister(){
+        let responseData = await REGISTER({"userName":this.user.userName,"password":this.user.password});
+        if (responseData && responseData.status === 200){
+          if(responseData.data){
+            localStorage.setItem('token', responseData.data.token);
+            localStorage.setItem('userId', responseData.data.userId);
+            localStorage.setItem('userName', responseData.data.userName);
+          }
+          this.$message({
+            message: responseData.message,
+            type: 'success',
+            offset:60
+          });
+          this.$router.push({path:"/mnItem/dayList"})
+        }else{
+          this.$message({
+            message: responseData.message,
+            type: 'success',
+            offset:60
+          });
+        }
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();

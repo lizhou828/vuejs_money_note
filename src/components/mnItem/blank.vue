@@ -41,7 +41,7 @@
                         <el-form-item label="是否必须" prop="needful">
                           <el-switch v-model="isNeedful"></el-switch>
                         </el-form-item>
-                        <el-form-item label="事件" prop="eventId">
+                        <el-form-item label="事件" prop="eventId" v-if="mnEventList && mnEventList.length > 0 ">
                           <el-select v-model="mnItem.eventId" placeholder="请选择">
                             <el-option
                               v-for="mnEvent in mnEventList"
