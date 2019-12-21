@@ -24,7 +24,7 @@
                           <div class="table_section_small"> {{index+1 }}</div>
                           <div class="table_section">{{mnEvent.eventName}}</div>
                           <div class="table_section_last">
-                            {{mnEvent.moneyCount|currency('￥')}}
+                            {{mnEvent.moneyCount|currency}}
                           </div>
                         </li>
                       </ul>

@@ -6,9 +6,9 @@
       </router-link>
     </div>
     <div class="gomenu radius20">
-      <router-link :to="{path:'/mnItem/blank',query: {day: getNowDate}}" >
+      <a @click="go_to_blank" >
             <img src="/static/public/images/icons/pencil.png" alt="" title=""/>
-      </router-link>
+      </a>
     </div>
   </div>
 </template>
@@ -17,10 +17,18 @@
 import {formatDate} from '../../common/date.js';
 export default {
   name: 'commonHead',
-  computed: {
-    getNowDate() {
-        return formatDate(new Date(),'yyyy-MM-dd');
+  methods: {
+    go_to_blank() {
+      let query_note_date = localStorage.getItem("query_note_date");
+      console.info("公共头部页面，localStorage中存储的 query_note_date=" + query_note_date)
+      if(!query_note_date || query_note_date === "" || typeof query_note_date === undefined){
+        let currentDay = formatDate(new Date(),'yyyy-MM-dd');
+        localStorage.setItem("query_note_date",currentDay);
+        console.info("公共头部页面，监测没有存query_note_date，更新为当前日期=" + query_note_date)
+      }
+      this.$router.push({path:"/mnItem/blank"})
     }
+
   }
 }
 </script>

@@ -100,6 +100,14 @@
           return callback(new Error('金额必须为数字'))
         }
       };
+      var validateNoteDate=(rule, value, callback) => {
+        if (!value || value === "" || typeof value === "undefined") {
+          console.info("validateNoteDate......value="+ value)
+          return  callback(new Error('请选择记账日期1111'))
+        }else{
+          return callback()
+        }
+      }
       return {
         rules: {
           itemName: [
@@ -110,7 +118,7 @@
             {required: true,validator: validateMoney, trigger: 'blur'}
           ],
           noteDate: [
-            {required: true, message: '请选择记账日期', trigger: 'change'}
+            {required: true, validator: validateNoteDate, trigger: 'blur'}
           ]
         },
 
@@ -124,9 +132,9 @@
       }
     },
     watch: {
-      $route(){ // 监听路由参数的变化
-        this.mnItem.note_date = this.$route.query.day;
-      },
+      // $route(){ // 监听路由参数的变化
+      //   this.mnItem.noteDate = this.$route.query.day;
+      // },
       'mnItem.cateId':{ //监听对象的属性
         handler:function(value){
           if(value && value != "" && value != undefined){
@@ -159,10 +167,10 @@
     methods: {
       changeDate(date) {
         this.mnItem.noteDate = date;
-        // sessionStorage.setItem("note_date",date);
-        this.$router.push(
-          {path: '/mnItem/blank', query: {day: date}}
-        )
+        console.info("记账页面，日期选择框有变动的日期=" + date);
+        localStorage.setItem("query_note_date",date);
+        console.info("记账页面，日期选择框有变动的日期，存入localStorage=" + localStorage.getItem("query_note_date") );
+        this.$router.push( {path: '/mnItem/blank'} )
       },
       changeCate(value) {
         // console.log("选择完类别数据：" + value);
@@ -189,7 +197,10 @@
             type: 'success',
             offset:60
           });
-          this.$router.push({path:"/mnItem/dayList",query:{"day":this.mnItem.note_date}})
+          console.info("记账页面，提交表单后，query_note_date日期=" + this.mnItem.noteDate );
+          localStorage.setItem("query_note_date",this.mnItem.noteDate);
+          console.info("记账页面，提交表单后，日期存入localStorage=" + localStorage.getItem("query_note_date") );
+          this.$router.push({path:"/mnItem/dayList"})
         }else{
           _this.isDisabled = false;
           this.$message({
@@ -203,12 +214,25 @@
         this.$refs[formName].resetFields();
       },
       async initData(){
-        let responseData = await ITEM_DETAIL({"itemId":this.$route.query.itemId});
+        let itemId = this.$route.query.itemId;
+        let responseData = await ITEM_DETAIL({"itemId":itemId});
         if (responseData && responseData.status === 200){
           this.currentUserId =   responseData.data.currentUserId;
-          this.mnItem =   responseData.data.mnItem;
+          if(responseData.data.mnItem &&  responseData.data.mnItem.noteDate){
+            this.mnItem =   responseData.data.mnItem;
+          }else{
+            // 受 ES5 的限制，Vue.js 不能检测到对象属性的添加或删除。因为 Vue.js 在初始化实例时将属性转为 getter/setter，所以属性必须在 data 对象上才能让 Vue.js 转换它，才能让它是响应的。
+            // 要处理这种情况，我们可以使用$set()方法，既可以新增属性,又可以触发视图更新。链接：https://www.jianshu.com/p/96c822d14d30
+            this.$set(this.mnItem, "noteDate", localStorage.getItem("query_note_date"));
+            // this.mnItem.noteDate =  localStorage.getItem("query_note_date");
+            console.info("初始化数据 this.mnItem.noteDate= " + this.mnItem.noteDate)
+          }
+
           this.cateOptions =   responseData.data.cateOptions;
           this.mnEventList =   responseData.data.mnEventList;
+          if(itemId && itemId != "" && itemId  > 0 && this.mnItem && this.mnItem.noteDate){
+            localStorage.setItem("query_note_date",this.mnItem.noteDate);
+          }
         }
       },
       async deleteItem(){

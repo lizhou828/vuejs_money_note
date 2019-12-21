@@ -1,5 +1,5 @@
-/* Template Version: 2.0 (Latest Update 08 May 2014) 
-/* CSS Reset 
+/* Template Version: 2.0 (Latest Update 08 May 2014)
+/* CSS Reset
 /*-----------------------------------------------------------------------------------*/
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; border: 0; outline: 0; font-size: 100%; vertical-align: baseline; background: transparent; } body { line-height: 1; } ol, ul { list-style: none; } blockquote, q { quotes: none; } blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; } :focus { outline: 0; } ins { text-decoration: none; } del { text-decoration: line-through; } table { border-collapse: collapse; border-spacing: 0; }
@@ -179,7 +179,7 @@ a.backtoblog{width:92%; padding:3% 4%; margin:-10px 0 15px 0; text-align:center;
 ul.responsive_table{ width:100%; float:left; clear:both; margin:0 0 10px 0; padding:0px; list-style:none;}
 li.table_row{width:100%; float:left; clear:both; line-height:40px;padding:0px; list-style:none;margin:0 0 2px 0;}
 .table_section_small{width:16%; float:left; padding:0 0 0 1%;}
-.table_section{ width:48%; float:left;padding:0 0 0 1%;}
+.table_section{ width:38%; float:left;padding:0 0 0 1%;}
 .table_section_last{ width:20; float:left;padding:0 0 0 1%;}
 
 /*-----------------Latest tweets style-------------------*/
@@ -211,11 +211,11 @@ li.social_flickr{ background-color:#90489c;}
 li.social_digg{ background-color:#8aaf50;}
 
 a.call_button{ float:left; clear:both;
-width:94%; display: block; text-align:center; font-size:24px; 
+width:94%; display: block; text-align:center; font-size:24px;
 padding:12px 3%; margin:0 0 15px 0;
 }
 a.map_button{ float:left; clear:both;
-width:94%; display: block; text-align:center; font-size:24px; 
+width:94%; display: block; text-align:center; font-size:24px;
 padding:12px 3%; margin:0 0 15px 0;
 }
 

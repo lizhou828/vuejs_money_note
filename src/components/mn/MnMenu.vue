@@ -12,8 +12,8 @@
                   <div class="menu">
                     <ul>
                       <li><router-link to="/user/userCenter"><img src="/static/public/images/icons/about.png" alt="" title="" /><span>个人中心</span></router-link></li>
-                      <li><router-link to="/mnItem/blank"><img src="/static/public/images/icons/pencil.png" alt="" title="" /><span>记账</span></router-link></li>
-                      <li><router-link to="/mnItem/dayList"><img src="/static/public/images/icons/docs.png" alt="" title="" /><span>账本</span></router-link></li>
+                      <li><a @click="to_mnItem_blank"><img src="/static/public/images/icons/pencil.png" alt="" title="" /><span>记账</span></a></li>
+                      <li><a @click="to_mnItem_dayList"><img src="/static/public/images/icons/docs.png" alt="" title="" /><span>账本</span></a></li>
 
                       <li><router-link to="/mnItem/incomePerMonth"><img src="/static/public/images/icons/statistics.png" alt="" title="" /><span>收入汇总</span></router-link></li>
                       <li><router-link to="/mnItem/payedPerMonth"><img src="/static/public/images/icons/statistics.png" alt="" title="" /><span>支出汇总</span></router-link></li>
@@ -41,8 +41,23 @@
 </template>
 
 <script>
+import {formatDate} from "../../common/date";
+let currentDate = formatDate(new Date(),"yyyy-MM-dd");
+let currentMonth = formatDate(new Date(),"yyyy-MM");
+
 export default {
-  name: 'MnMenu'
+  name: 'MnMenu',
+  methods: {
+    to_mnItem_blank() {
+      localStorage.setItem("query_note_date",currentDate );
+      this.$router.push({path:"/mnItem/blank"})
+    },
+    to_mnItem_dayList() {
+      localStorage.setItem("query_note_date",currentDate );
+      this.$router.push({path:"/mnItem/dayList"})
+    }
+
+  },
 }
 </script>
 

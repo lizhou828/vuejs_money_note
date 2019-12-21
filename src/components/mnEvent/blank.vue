@@ -50,7 +50,7 @@
                               <li class="table_row" style="cursor: pointer" v-for="mnItem in mnItemList" @click="detailPage(mnItem.itemId) ">
                                 <div class="table_section" style="width:38%">{{mnItem.itemName}}</div>
                                 <div class="table_section_last" style="width:32%">
-                                  {{mnItem.money|currency('￥') }}
+                                  {{mnItem.money|currency}}
                                 </div>
                                 <div class="table_section_small" style="width:25%">{{mnItem.noteDate}}</div>
                               </li>

@@ -32,12 +32,12 @@
                             <h4>
                                   <span>收入：
                                       <span
-                                        class="money_green_color">{{currentDayCountMap.income|currency('￥')}}</span>
+                                        class="money_green_color">{{currentDayCountMap.income|currency}}</span>
                                   </span>
                             </h4>
                             <h4>
                                   <span>支出：
-                                      <span class="money_red_color">{{currentDayCountMap.pay|currency('￥')}}</span>
+                                      <span class="money_red_color">{{currentDayCountMap.pay|currency}}</span>
                                   </span>
                             </h4>
                           </div>
@@ -56,7 +56,7 @@
                               <span>金额：
                                   <span
                                     v-bind:class="{'money_red_color':mnItem.type ==-1 ,'money_green_color':mnItem.type == 1 ,}">
-                                      {{mnItem.money|currency('￥')}}
+                                      {{mnItem.money|currency}}
                                   </span>
                               </span>
                             </h4>
@@ -108,7 +108,7 @@
           this.currentDayCountMap =   responseData.data.currentDayCountMap;
         }
         localStorage.setItem("query_note_date",this.currentDate);
-        console.info("this.currentDate=" + this.currentDate)
+        // console.info("监听路由参数的变化this.currentDate=" + this.currentDate)
       },
     },
     methods: {

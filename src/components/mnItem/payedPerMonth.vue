@@ -33,21 +33,21 @@
                               <h4>
                                                             <span>收入：
                                                                 <span style="color:green" >
-                                                                    {{currentMonthSumMap.income|currency('￥')}}
+                                                                    {{currentMonthSumMap.income|currency}}
                                                                 </span>
                                                             </span>
                               </h4>
                               <h4>
                                                             <span>支出：
                                                                 <span style="color:red" >
-                                                                    {{currentMonthSumMap.pay|currency('￥')}}
+                                                                    {{currentMonthSumMap.pay|currency}}
                                                                 </span>
                                                             </span>
                               </h4>
                               <h4>
                                                             <span>结余：
                                                                 <span style="color:black" >
-                                                                    {{currentMonthSumMap.income - currentMonthSumMap.pay |currency('￥')}}
+                                                                    {{currentMonthSumMap.income - currentMonthSumMap.pay |currency}}
                                                                 </span>
                                                             </span>
                               </h4>
@@ -66,7 +66,7 @@
                               <h4>
                                   <span>日均支出：
                                       <span style="color:red" >
-                                          {{payedAverageEveryDay|currency('￥')}}
+                                          {{payedAverageEveryDay|currency}}
                                       </span>
                                   </span>
                               </h4>
@@ -82,7 +82,7 @@
                             <a class="post_more" @click="to_day_list(mn.noteDate)">
                             </a>
                             <div class="post_right_reveal">
-                              <h4><span style="color:red">总支出 : {{ mn.money|currency('￥') }}</span></h4>
+                              <h4><span style="color:red">总支出 : {{ mn.money|currency }}</span></h4>
                             </div>
                             <div class="post_left">
                               <span class="day">{{ mn.day }}</span>
