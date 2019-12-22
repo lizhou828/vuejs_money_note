@@ -11,6 +11,7 @@ Router.prototype.push = function push(location) {
 
 // import HelloWorld from '@/components/HelloWorld'
 import MnMenu from '@/components/mn/MnMenu'
+import test from '@/components/test'
 import weixin from '@/components/mn/weixin'
 import contact from '@/components/mn/contact'
 import setting from '@/components/mn/setting'
@@ -36,6 +37,11 @@ const router = new Router({
       path: '/',
       name: '首页',
       component: MnMenu
+    },
+    {
+      path: '/test',
+      name: '测试页面',
+      component: test
     },
     {
       path: '/mn/menu',
