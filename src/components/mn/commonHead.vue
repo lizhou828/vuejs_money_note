@@ -17,6 +17,7 @@
 import {formatDate} from '../../common/date.js';
 export default {
   name: 'commonHead',
+  inject:['reload'],
   methods: {
     go_to_blank() {
       let query_note_date = localStorage.getItem("query_note_date");
@@ -27,6 +28,7 @@ export default {
         console.info("公共头部页面，监测没有存query_note_date，更新为当前日期=" + query_note_date)
       }
       this.$router.push({path:"/mnItem/blank"})
+      this.reload();
     }
 
   }
