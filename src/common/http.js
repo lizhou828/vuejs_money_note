@@ -1,12 +1,13 @@
 import axios from 'axios'
 import QS from 'qs'; // 引入qs模块，用来序列化post类型的数据，
+import { Message} from 'element-ui';
 
 //==========================================================================================axios全局的配置==========================================================================================
 axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'http://192.168.1.104:8087';
+  axios.defaults.baseURL = 'http://192.168.222.87:8087';
 }
 else if (process.env.NODE_ENV == 'testing') {
   axios.defaults.baseURL = 'http://127.0.0.1:8080';
@@ -20,8 +21,81 @@ axios.interceptors.response.use(
   response => {
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
-    if (response.status === 200) {
-      return Promise.resolve(response);
+    if (response.status === 200 ) { //通信的http状态码
+      console.info("http 200");
+      if(response.data && response.data.status && response.data.status === 200){ //业务层面的状态码
+          return Promise.resolve(response);
+      }else{
+          if (response.data.status) {
+            switch (response.data.status) {
+            // 401: 未登录
+            // 未登录则跳转登录页面，并携带当前页面的路径
+            // 在登录成功后返回当前页面，这一步需要在登录页操作。
+            //由于前端和服务器端采用JWT的token通信，并且服务器端做了url拦截。若前端发出的请求被服务器端拦截到，则服务器端返回401，所以axios在前端无需做url拦截处理
+            case 401:
+              Message({
+                message: '登录过期，请重新登录...',
+                type: 'error',
+                offset:60
+              });
+              // 清除token
+              localStorage.removeItem('token');
+              setTimeout(() => {
+                // TODO 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
+                window.location.href="/user/login";
+              },1000);
+              break;
+
+            // 403 token过期
+            // 登录过期对用户进行提示
+            // 清除本地token和清空vuex中token对象
+            // 跳转登录页面
+            case 403:
+              Message({
+                message: '无访问权限...',
+                type: 'error',
+                offset:60
+              });
+              break;
+
+            // 404请求不存在
+            case 404:
+              Message({
+                message: '请求url不存在...',
+                type: 'warning',
+                offset:60
+              });
+              break;
+            case 400:
+              Message({
+                message: '请求参数错误...',
+                type: 'warning',
+                offset:60
+              });
+              break;
+            case 500:
+              Message({
+                message: '服务器返回内容错误...',
+                type: 'warning',
+                offset:60
+              });
+              break;
+            // 其他错误，直接抛出错误提示
+            default:
+              // Toast({
+              // message: error.response.data.message,
+              // duration: 1500,
+              // forbidClick: true
+              // });
+              Message({
+                message: '服务器异常c',
+                type: 'warning',
+                offset:60
+              });
+          }
+          // return Promise.reject(response);
+        }
+      }
     } else {
       return Promise.reject(response);
     }
@@ -32,80 +106,6 @@ axios.interceptors.response.use(
   // 下面列举几个常见的操作，其他需求可自行扩展
   error => {
     if (error.response.status) {
-      switch (error.response.status) {
-        // 401: 未登录
-        // 未登录则跳转登录页面，并携带当前页面的路径
-        // 在登录成功后返回当前页面，这一步需要在登录页操作。
-        //由于前端和服务器端采用JWT的token通信，并且服务器端做了url拦截。若前端发出的请求被服务器端拦截到，则服务器端返回401，所以axios在前端无需做url拦截处理
-        case 401:
-          router.replace({
-            path: '/user/login',
-            query: {
-              redirect: router.currentRoute.fullPath
-            }
-          });
-          break;
-
-        // 403 token过期
-        // 登录过期对用户进行提示
-        // 清除本地token和清空vuex中token对象
-        // 跳转登录页面
-        case 403:
-          this.$message({
-            message: '登录过期，请重新登录',
-            type: 'warning'
-          });
-          // Toast({
-          // message: '登录过期，请重新登录',
-          // duration: 1000,
-          // forbidClick: true
-          // });
-
-          // 清除token
-          localStorage.removeItem('token');
-          store.commit('loginSuccess', null);
-          // 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
-          setTimeout(() => {
-            router.replace({
-              path: '/user/login',
-              query: {
-                redirect: router.currentRoute.fullPath
-              }
-            });
-          }, 1000);
-          break;
-
-        // 404请求不存在
-        case 404:
-          this.$message({
-            message: '请求url不存在',
-            type: 'warning'
-          });
-          break;
-        case 400:
-          this.$message({
-            message: '请求参数错误',
-            type: 'warning'
-          });
-          break;
-        case 500:
-          this.$message({
-            message: '服务器返回内容错误',
-            type: 'warning'
-          });
-          break;
-        // 其他错误，直接抛出错误提示
-        default:
-          // Toast({
-          // message: error.response.data.message,
-          // duration: 1500,
-          // forbidClick: true
-          // });
-          this.$message({
-            message: 'error.response.data.message',
-            type: 'warning'
-          });
-      }
       return Promise.reject(error.response);
     }
   });
@@ -146,7 +146,12 @@ export function get(url, params) {
     }).then(res => {
       resolve(res.data);
     }).catch(err => {
-      reject(err.data)
+      reject(err.data);
+      Message({
+        message: err.data.message,
+        type: 'warning',
+        offset:60
+      });
     })
   });
 }
