@@ -7,7 +7,7 @@ axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'http://192.168.222.87:8087';
+  axios.defaults.baseURL = 'http://192.168.222.17:8087';
 }
 else if (process.env.NODE_ENV == 'testing') {
   axios.defaults.baseURL = 'http://127.0.0.1:8080';
@@ -147,11 +147,6 @@ export function get(url, params) {
       resolve(res.data);
     }).catch(err => {
       reject(err.data);
-      Message({
-        message: err.data.message,
-        type: 'warning',
-        offset:60
-      });
     })
   });
 }

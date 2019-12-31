@@ -102,8 +102,8 @@
       };
       var validateNoteDate=(rule, value, callback) => {
         if (!value || value === "" || typeof value === "undefined") {
-          console.info("validateNoteDate......value="+ value)
-          return  callback(new Error('请选择记账日期1111'))
+          console.info("validateNoteDate......value="+ value);
+          return  callback(new Error('请选择记账日期'))
         }else{
           return callback()
         }
