@@ -7,7 +7,7 @@ axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // 环境的切换
 if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'http://192.168.222.17:8087';
+  axios.defaults.baseURL = 'http://192.168.1.104:8087';
 }
 else if (process.env.NODE_ENV == 'testing') {
   axios.defaults.baseURL = 'http://127.0.0.1:8080';
@@ -22,7 +22,6 @@ axios.interceptors.response.use(
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200 ) { //通信的http状态码
-      console.info("http 200");
       if(response.data && response.data.status && response.data.status === 200){ //业务层面的状态码
           return Promise.resolve(response);
       }else{
@@ -38,8 +37,6 @@ axios.interceptors.response.use(
                 type: 'error',
                 offset:60
               });
-              // 清除token
-              localStorage.removeItem('token');
               setTimeout(() => {
                 // TODO 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
                 window.location.href="/#/user/login";
@@ -75,7 +72,7 @@ axios.interceptors.response.use(
               break;
             case 500:
               Message({
-                message: '服务器返回内容错误...',
+                message: response.data.message,
                 type: 'warning',
                 offset:60
               });
@@ -88,7 +85,7 @@ axios.interceptors.response.use(
               // forbidClick: true
               // });
               Message({
-                message: '服务器异常c',
+                message: '服务器异常...',
                 type: 'warning',
                 offset:60
               });
