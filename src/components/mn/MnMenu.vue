@@ -32,6 +32,11 @@
                 </div>
               </div>
             </div>
+            <div style="text-align: center;color: white;font-size: larger;margin-bottom: 20px">
+              Copyright&nbsp;©&nbsp;2014&nbsp;-&nbsp;2020  &nbsp;&nbsp;lizhou828.com&nbsp;版权所有 <br/>
+              <a href="http://www.beian.miit.gov.cn" style="color: white;font-size: larger" >粤ICP备19107759号-1</a>
+            </div>
+
             <div class="swiper-scrollbar"></div>
           </div>
         </div>
