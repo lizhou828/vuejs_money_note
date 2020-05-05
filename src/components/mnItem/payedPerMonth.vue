@@ -27,29 +27,29 @@
                         </div>
 
                         <ul class="posts">
-                          <li class="post" v-if="currentMonthSumMap && currentMonthSumMap.length > 0" >
+                          <li class="post"  >
                             <a href="javascript:void(0)" class="post_more"></a>
                             <div class="post_right_reveal">
                               <h4>
-                                                            <span>收入：
-                                                                <span style="color:green" >
-                                                                    {{currentMonthSumMap.income|currency}}
-                                                                </span>
-                                                            </span>
+                                  <span>收入：
+                                      <span style="color:green" >
+                                          {{currentMonthSumMap.income|currency}}
+                                      </span>
+                                  </span>
                               </h4>
                               <h4>
-                                                            <span>支出：
-                                                                <span style="color:red" >
-                                                                    {{currentMonthSumMap.pay|currency}}
-                                                                </span>
-                                                            </span>
+                                  <span>支出：
+                                      <span style="color:red" >
+                                          {{currentMonthSumMap.pay|currency}}
+                                      </span>
+                                  </span>
                               </h4>
                               <h4>
-                                                            <span>结余：
-                                                                <span style="color:black" >
-                                                                    {{currentMonthSumMap.income - currentMonthSumMap.pay |currency}}
-                                                                </span>
-                                                            </span>
+                                  <span>结余：
+                                      <span style="color:black" >
+                                          {{currentMonthSumMap.income - currentMonthSumMap.pay |currency}}
+                                      </span>
+                                  </span>
                               </h4>
                             </div>
                             <div class="post_left">
