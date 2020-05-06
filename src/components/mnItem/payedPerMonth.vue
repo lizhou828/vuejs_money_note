@@ -26,7 +26,12 @@
                           </div>
                         </div>
 
-                        <ul class="posts">
+                        <el-row>
+                          <el-button type="success" plain @click="orderByColumn(month,'note_date','asc')">按日期显示</el-button>
+                          <el-button type="primary" plain @click="orderByColumn(month,'money','desc')">按金额显示</el-button>
+                        </el-row>
+
+                        <ul class="posts" style="margin-top: 10px;">
                           <li class="post"  >
                             <a href="javascript:void(0)" class="post_more"></a>
                             <div class="post_right_reveal">
@@ -117,6 +122,8 @@ export default {
   data() {
     return {
       month:'',
+      orderBy:'note_date',
+      ascDesc:'asc',
       currentMonthSumMap:{},
       payedAverageEveryDay:0,
       mnItemList:[]
@@ -127,6 +134,7 @@ export default {
       this.$router.push(
         {path: '/mnItem/payedPerMonth', query: {month: month}}
       );
+      this.month = month;
       this.getDataByMonth(month)
     },
     to_day_list(noteDate){
@@ -134,18 +142,38 @@ export default {
       this.$router.push({path:'/mnItem/dayList',query:{day:noteDate}});
     },
     async initData(){
-      let month = formatDate(new Date(), "yyyy-MM");
-      await this.getDataByMonth(month)
+      let month = "";
+      if(this.$route.query && this.$route.query.month){
+        month  = this.$route.query.month;
+        // console.info("当前url中月份参数，month=" +month)
+      }
+      if(month == null || month == '' || typeof month  == "undefined"){
+        month = formatDate(new Date(), "yyyy-MM");
+        // console.info("当前url中没有月份参数，采用默认的当前月份，month=" +month)
+      }
+      this.month = month;
+      this.orderBy =  this.$route.query && this.$route.query.orderBy ? this.$route.query.orderBy : "note_date";
+      this.ascDesc =  this.$route.query && this.$route.query.ascDesc ? this.$route.query.ascDesc : "asc";
+      await this.getDataByMonth()
     },
-    async  getDataByMonth(month){
+    async  getDataByMonth(){
       let _this = this;
-      let responseData = await MN_PAYED_PER_MONTH({"month":month});
+      let responseData = await MN_PAYED_PER_MONTH({"month":_this.month,"orderBy":_this.orderBy,"ascDesc":_this.ascDesc});
       if (responseData && responseData.status === 200){
         _this.month = responseData.data.month;
         _this.currentMonthSumMap = responseData.data.currentMonthSumMap;
         _this.mnItemList = responseData.data.mnItemList;
         _this.payedAverageEveryDay = responseData.data.payedAverageEveryDay;
       }
+    },
+    orderByColumn(month,orderBy,ascDesc){
+      this.$router.push(
+        {path: '/mnItem/payedPerMonth', query: {month: month,orderBy:orderBy,ascDesc:ascDesc}}
+      );
+      this.month = month;
+      this.orderBy =  orderBy;
+      this.ascDesc =  ascDesc ;
+      this.getDataByMonth()
     }
   },
   created:function(){
