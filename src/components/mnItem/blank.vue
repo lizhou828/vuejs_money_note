@@ -167,9 +167,9 @@
     methods: {
       changeDate(date) {
         this.mnItem.noteDate = date;
-        console.info("记账页面，日期选择框有变动的日期=" + date);
+        // console.info("记账页面，日期选择框有变动的日期=" + date);
         localStorage.setItem("query_note_date",date);
-        console.info("记账页面，日期选择框有变动的日期，存入localStorage=" + localStorage.getItem("query_note_date") );
+        // console.info("记账页面，日期选择框有变动的日期，存入localStorage=" + localStorage.getItem("query_note_date") );
         this.$router.push( {path: '/mnItem/blank'} )
       },
       changeCate(value) {
@@ -190,16 +190,16 @@
       async save_or_update(){
         let _this = this;
         let responseData = await ITEM_SAVE_OR_UPDATE(this.mnItem);
-        console.info("返回数据：" + responseData + ",data="+ responseData.data);
+        // console.info("返回数据：" + responseData + ",data="+ responseData.data);
         if (responseData && responseData.statusCode === 200){
           this.$message({
             message: responseData.message,
             type: 'success',
             offset:60
           });
-          console.info("记账页面，提交表单后，query_note_date日期=" + this.mnItem.noteDate );
+          // console.info("记账页面，提交表单后，query_note_date日期=" + this.mnItem.noteDate );
           localStorage.setItem("query_note_date",this.mnItem.noteDate);
-          console.info("记账页面，提交表单后，日期存入localStorage=" + localStorage.getItem("query_note_date") );
+          // console.info("记账页面，提交表单后，日期存入localStorage=" + localStorage.getItem("query_note_date") );
           this.$router.push({path:"/mnItem/dayList"})
         }else{
           _this.isDisabled = false;
@@ -225,7 +225,7 @@
             // 要处理这种情况，我们可以使用$set()方法，既可以新增属性,又可以触发视图更新。链接：https://www.jianshu.com/p/96c822d14d30
             this.$set(this.mnItem, "noteDate", localStorage.getItem("query_note_date"));
             // this.mnItem.noteDate =  localStorage.getItem("query_note_date");
-            console.info("初始化数据 this.mnItem.noteDate= " + this.mnItem.noteDate)
+            // console.info("初始化数据 this.mnItem.noteDate= " + this.mnItem.noteDate)
           }
 
           this.cateOptions =   responseData.data.cateOptions;

@@ -107,7 +107,7 @@ export default {
     },
     async save_or_update(){
       let responseData = await EVENT_SAVE_OR_UPDATE(this.mnEvent);
-      console.info("返回数据：" + responseData + ",data="+ responseData.data);
+      // console.info("返回数据：" + responseData + ",data="+ responseData.data);
       if (responseData && responseData.statusCode === 200){
         this.$message({
           message: responseData.message,

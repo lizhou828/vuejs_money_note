@@ -25,7 +25,7 @@ export default {
     }
   },
   mounted(){
-    console.info("加载了mounted()方法....");
+    // console.info("加载了mounted()方法....");
     this.users=  [
       {
         "id": 1,

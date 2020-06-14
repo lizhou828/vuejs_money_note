@@ -143,7 +143,7 @@
         this.changeDate(nextDate)
       },
       changeDate(date){
-        console.info("改变后的日期：" + date);
+        // console.info("改变后的日期：" + date);
         localStorage.setItem("query_note_date",date);
         this.$router.push({path: '/mnItem/dayList', query: {"day":date}});
         this.getDataByDate(date)
