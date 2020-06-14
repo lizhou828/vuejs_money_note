@@ -13,17 +13,19 @@
                       <div class="posts_archive_page">
 
                         <h2 class="page_title">本月支出汇总</h2>
-                        <div class="toogle_wrap_blog radius8">
-                          <div>
+                        <div class="toogle_wrap_blog radius8" style="text-align: center">
+                          <el-button-group style="width: 100%">
+                            <el-button  style="border-radius: 24px 0 0 24px;" type="success"  plain icon="el-icon-arrow-left" @click=goNextMonth()></el-button>
                             <el-date-picker
                               v-model="month"
                               type="month"
                               @change="changeMonth"
                               value-format="yyyy-MM"
-                              style="width: 200px;border: none; background-color: #85af5d;color: #fff;font-size: 25px;line-height: 35px;"
+                              style="width: 50%;border: none; background-color: #85af5d;color: #fff;font-size: 18px;line-height: 35px;"
                               placeholder="请选择月份">
                             </el-date-picker>
-                          </div>
+                            <el-button style="border-radius: 0 24px 24px 0;float: right;" type="success" plain icon="el-icon-arrow-right" @click=goLastMonth()></el-button>
+                          </el-button-group>
                         </div>
 
                         <el-row>
@@ -116,7 +118,7 @@
 <script>
 import {formatDate} from "../../common/date";
 import {MN_PAYED_PER_MONTH} from "../../common/request_url";
-
+import moment from 'moment'
 export default {
   name: 'payedPerMonth',
   data() {
@@ -136,6 +138,16 @@ export default {
       );
       this.month = month;
       this.getDataByMonth(month)
+    },
+    goLastMonth(){
+      let lastMonth = moment(this.month).add(1,"months").format('YYYY-MM');
+      this.month = lastMonth;
+      this.changeMonth(lastMonth)
+    },
+    goNextMonth(){
+      let nextMonth = moment(this.month).subtract(1,"months").format('YYYY-MM');
+      this.month = nextMonth;
+      this.changeMonth(nextMonth)
     },
     to_day_list(noteDate){
       localStorage.setItem("query_note_date",noteDate);

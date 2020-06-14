@@ -13,16 +13,21 @@
                     <div class="posts_archive_page">
 
                       <h2 class="page_title">今天账本</h2>
-                      <div class="toogle_wrap_blog radius8">
-                        <div>
+                      <div class="toogle_wrap_blog radius8" style="text-align: center">
+                        <el-button-group style="width: 100%">
+                          <el-button  style="border-radius: 24px 0 0 24px;" type="success"  plain icon="el-icon-arrow-left" @click=goNextDate()></el-button>
                           <el-date-picker
-                              v-model="currentDate"
-                              type="date"
-                              @change="changeDate"
-                              value-format="yyyy-MM-dd"
-                              placeholder="选择日期"  style="width: 200px;border: none; background-color: #85af5d;color: #fff;font-size: 25px;line-height: 35px;" >
+                            style="width:55%;border: none; background-color: #85af5d;color: #fff;font-size: 18px;line-height: 35px;"
+                            v-model="currentDate"
+                            type="date"
+                            @change="changeDate"
+                            value-format="yyyy-MM-dd"
+                            align="center"
+                            :picker-options="{'firstDayOfWeek': 1}"
+                            placeholder="选择日期"   >
                           </el-date-picker>
-                        </div>
+                          <el-button style="border-radius: 0 24px 24px 0;float: right;" type="success" plain icon="el-icon-arrow-right" @click=goLastDate()></el-button>
+                        </el-button-group>
                       </div>
                       <ul class="posts">
                         <li class="post"
@@ -89,6 +94,7 @@
 
 <script>
   import {MN_DAY_LIST} from "../../common/request_url";
+  import moment from 'moment'
   export default {
     name: 'dayList',
     data() {
@@ -116,6 +122,20 @@
         this.$router.push(
           {path: '/mnItem/blank', query: {itemId: item_id}}
         )
+      },
+      goLastDate(){
+        // console.info("准备去前一天，当前日期：" + this.currentDate);
+        let lastDate = moment(this.currentDate).add(1,"days").format('YYYY-MM-DD');
+        // console.info("准备去前一天，lastDate=" + lastDate);
+        this.currentDate = lastDate;
+        this.changeDate(lastDate)
+      },
+      goNextDate(){
+        // console.info("准备去后一天，当前日期：" + this.currentDate);
+        let nextDate = moment(this.currentDate).subtract(1,"days").format('YYYY-MM-DD');
+        // console.info("准备去后一天，nextDate =" + nextDate );
+        this.currentDate = nextDate;
+        this.changeDate(nextDate)
       },
       changeDate(date){
         console.info("改变后的日期：" + date);
