@@ -56,16 +56,21 @@
                         <li class="post" v-for="mnItem in  mnItemList " @click="editItemDetail(mnItem.itemId)">
                           <a href="javascript:void(0)" class="post_more"></a>
                           <div class="post_right_reveal">
-                            <h4><span>名称：{{mnItem.itemName}}</span></h4>
+                            <h4><span style="overflow: hidden; white-space: nowrap;	text-overflow: ellipsis;">名称：{{mnItem.itemName}}</span></h4>
                             <h4>
-                              <span>金额：
+                              <span style="overflow: hidden; white-space: nowrap;	text-overflow: ellipsis;">
+                                金额：
                                   <span
                                     v-bind:class="{'money_red_color':mnItem.type ==-1 ,'money_green_color':mnItem.type == 1 ,}">
                                       {{mnItem.money|currency}}
                                   </span>
                               </span>
                             </h4>
-                            <h4><span>时间：{{mnItem.updateTime && mnItem.updateTime != undefined && mnItem.updateTime != "" ? mnItem.updateTime : mnItem.createTime}}</span></h4>
+                            <h4>
+                              <span style="overflow: hidden; white-space: nowrap;	text-overflow: ellipsis;">
+                                时间：{{mnItem.updateTime && mnItem.updateTime != undefined && mnItem.updateTime != "" ? mnItem.updateTime : mnItem.createTime}}
+                              </span>
+                            </h4>
                           </div>
                           <div class="post_left">
                             <div :class="{'container_green':mnItem.type == 1 , 'container_red':mnItem.type == -1}">
