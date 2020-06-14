@@ -13,7 +13,7 @@
                       <h3>联系我们</h3>
                       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" label-position="left" class="demo-ruleForm">
                         <el-form-item label="标题" prop="title">
-                          <el-input v-model="ruleForm.title" placeholder="请选择标题"></el-input>
+                          <el-input v-model="ruleForm.title" placeholder="请输入标题"></el-input>
                         </el-form-item>
                         <el-form-item label="类型" prop="type">
                           <el-select v-model="ruleForm.type" placeholder="请选择类型">
