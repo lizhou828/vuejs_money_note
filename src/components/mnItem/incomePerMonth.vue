@@ -134,7 +134,7 @@ export default {
     async  getDataByMonth(month){
       let _this = this;
       let responseData = await MN_INCOME_PER_MONTH({"month":month});
-      if (responseData && responseData.status === 200){
+      if (responseData && responseData.statusCode === 200){
         _this.month = responseData.data.month;
         _this.currentMonthSumMap = responseData.data.currentMonthSumMap;
         _this.mnItemList = responseData.data.mnItemList;

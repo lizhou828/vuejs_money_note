@@ -109,7 +109,7 @@ export default {
       // 然后根据返回的数据做相应的处理，比如储存token
       // console.log("请求登录接口：返回的数据是：" + JSON.stringify(userInfo));
 
-      if (responseData.status != 200) {
+      if (responseData.statusCode != 200) {
         this.$message({
           message: responseData.message,
           type: 'error',

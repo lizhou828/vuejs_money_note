@@ -113,7 +113,7 @@
       $route(){ // 监听路由参数的变化
         this.currentDate = this.$route.query.day;
         let responseData = MN_DAY_LIST({"day":this.currentDate});
-        if (responseData && responseData.status === 200){
+        if (responseData && responseData.statusCode === 200){
           this.currentDate =   responseData.data.currentDate;
           this.mnItemList =   responseData.data.mnItemList;
           this.currentDayCountMap =   responseData.data.currentDayCountMap;
@@ -158,7 +158,7 @@
       async getDataByDate(date){
         let _this = this;
         let responseData = await MN_DAY_LIST({"day":date});
-        if (responseData && responseData.status === 200){
+        if (responseData && responseData.statusCode === 200){
           _this.currentDate =   responseData.data.currentDate;
           _this.mnItemList =   responseData.data.mnItemList;
           _this.currentDayCountMap =   responseData.data.currentDayCountMap;

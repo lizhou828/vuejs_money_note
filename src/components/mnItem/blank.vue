@@ -191,7 +191,7 @@
         let _this = this;
         let responseData = await ITEM_SAVE_OR_UPDATE(this.mnItem);
         console.info("返回数据：" + responseData + ",data="+ responseData.data);
-        if (responseData && responseData.status === 200){
+        if (responseData && responseData.statusCode === 200){
           this.$message({
             message: responseData.message,
             type: 'success',
@@ -216,7 +216,7 @@
       async initData(){
         let itemId = this.$route.query.itemId;
         let responseData = await ITEM_DETAIL({"itemId":itemId});
-        if (responseData && responseData.status === 200){
+        if (responseData && responseData.statusCode === 200){
           this.currentUserId =   responseData.data.currentUserId;
           if(responseData.data.mnItem &&  responseData.data.mnItem.noteDate){
             this.mnItem =   responseData.data.mnItem;
@@ -237,7 +237,7 @@
       },
       async deleteItem(){
         let responseData = await ITEM_DELETE({"itemId":this.mnItem.itemId});
-        if (responseData && responseData.status === 200){
+        if (responseData && responseData.statusCode === 200){
           this.$message({
             message: responseData.message,
             type: 'success',

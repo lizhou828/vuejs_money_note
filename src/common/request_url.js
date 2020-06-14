@@ -8,9 +8,10 @@ import {get,post} from './http.js'
  // 登录接口
  export const LOGIN = params => post( '/user/login', params);
  // 定义注册接口
- export const REGISTER = params => post( '/user/register', params);
+ export const REGISTER = params => post( '/user/register', params);status
  // 定义注销接口
  export const LOGOUT = params => post( '/user/logout', params);
+export const ADD_FEEDBACK = params => post( '/feedback/add', params);
 
 
 export const EVENT_DETAIL = params => get( '/mnEvent/detail', params);

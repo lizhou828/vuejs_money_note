@@ -99,7 +99,7 @@ export default {
     async getDataById(eventId){
       let _this = this;
       let responseData = await EVENT_DETAIL({"id":eventId});
-      if (responseData && responseData.status === 200){
+      if (responseData && responseData.statusCode === 200){
         _this.currentUserId = responseData.data.currentUserId;
         _this.mnEvent = responseData.data.mnEvent;
         _this.mnItemList = responseData.data.mnItemList;
@@ -108,7 +108,7 @@ export default {
     async save_or_update(){
       let responseData = await EVENT_SAVE_OR_UPDATE(this.mnEvent);
       console.info("返回数据：" + responseData + ",data="+ responseData.data);
-      if (responseData && responseData.status === 200){
+      if (responseData && responseData.statusCode === 200){
         this.$message({
           message: responseData.message,
           type: 'success',
@@ -128,7 +128,7 @@ export default {
     },
     async deleteEvent() {
       let responseData = await EVENT_DELETE({"id":this.mnEvent.eventId});
-      if (responseData && responseData.status === 200){
+      if (responseData && responseData.statusCode === 200){
         this.$message({
           message: responseData.message,
           type: 'success',

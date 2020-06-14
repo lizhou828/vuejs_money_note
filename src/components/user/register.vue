@@ -113,7 +113,7 @@ export default {
     async doRegister(){
         let _this = this;
         let responseData = await REGISTER({"userName":this.user.userName,"password":this.user.password});
-        if (responseData && responseData.status === 200){
+        if (responseData && responseData.statusCode === 200){
           if(responseData.data){
             localStorage.setItem('token', responseData.data.token);
             localStorage.setItem('userId', responseData.data.userId);

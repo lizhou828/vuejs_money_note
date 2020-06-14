@@ -21,80 +21,79 @@ axios.interceptors.response.use(
   response => {
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
-    if (response.status === 200 ) { //通信的http状态码
-      if(response.data && response.data.status && response.data.status === 200){ //业务层面的状态码
-          return Promise.resolve(response);
-      }else{
-          if (response.data.status) {
-            switch (response.data.status) {
-            // 401: 未登录
-            // 未登录则跳转登录页面，并携带当前页面的路径
-            // 在登录成功后返回当前页面，这一步需要在登录页操作。
-            //由于前端和服务器端采用JWT的token通信，并且服务器端做了url拦截。若前端发出的请求被服务器端拦截到，则服务器端返回401，所以axios在前端无需做url拦截处理
-            case 401:
-              Message({
-                message: '登录过期，请重新登录...',
-                type: 'error',
-                offset:60
-              });
-              setTimeout(() => {
-                // TODO 跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
-                window.location.href="/#/user/login";
-              },1000);
-              break;
-
-            // 403 token过期
-            // 登录过期对用户进行提示
-            // 清除本地token和清空vuex中token对象
-            // 跳转登录页面
-            case 403:
-              Message({
-                message: '无访问权限...',
-                type: 'error',
-                offset:60
-              });
-              break;
-
-            // 404请求不存在
-            case 404:
-              Message({
-                message: '请求url不存在...',
-                type: 'warning',
-                offset:60
-              });
-              break;
-            case 400:
-              Message({
-                message: '请求参数错误...',
-                type: 'warning',
-                offset:60
-              });
-              break;
-            case 500:
-              Message({
-                message: response.data.message,
-                type: 'warning',
-                offset:60
-              });
-              break;
-            // 其他错误，直接抛出错误提示
-            default:
-              // Toast({
-              // message: error.response.data.message,
-              // duration: 1500,
-              // forbidClick: true
-              // });
-              Message({
-                message: '服务器异常...',
-                type: 'warning',
-                offset:60
-              });
-          }
-          // return Promise.reject(response);
-        }
-      }
-    } else {
+    if (!response.status || response.status != 200 ) {
+      //通信的http状态码
       return Promise.reject(response);
+    }
+    if(response.data && response.data.statusCode && response.data.statusCode === 200){
+        //业务层面的状态码
+        return Promise.resolve(response);
+    }else{
+      switch (response.data.statusCode) {
+        // 401: 未登录
+        // 未登录则跳转登录页面，并携带当前页面的路径
+        // 在登录成功后返回当前页面，这一步需要在登录页操作。
+        //由于前端和服务器端采用JWT的token通信，并且服务器端做了url拦截。若前端发出的请求被服务器端拦截到，则服务器端返回401，所以axios在前端无需做url拦截处理
+        case 401:
+          Message({
+            message: '登录过期，请重新登录...',
+            type: 'error',
+            offset:60
+          });
+          setTimeout(() => {
+            //  跳转登录页面，并将要浏览的页面fullPath传过去，登录成功后跳转需要访问的页面
+            window.location.href="/#/user/login";
+          },1000);
+          break;
+
+        // 403 token过期
+        // 登录过期对用户进行提示
+        // 清除本地token和清空vuex中token对象
+        // 跳转登录页面
+        case 403:
+          Message({
+            message: '无访问权限...',
+            type: 'error',
+            offset:60
+          });
+          break;
+
+        // 404请求不存在
+        case 404:
+          Message({
+            message: '请求url不存在...',
+            type: 'warning',
+            offset:60
+          });
+          break;
+        case 400:
+          Message({
+            message: '请求参数错误...',
+            type: 'warning',
+            offset:60
+          });
+          break;
+        case 500:
+          Message({
+            message: response.data.message,
+            type: 'warning',
+            offset:60
+          });
+          break;
+        // 其他错误，直接抛出错误提示
+        default:
+          // Toast({
+          // message: error.response.data.message,
+          // duration: 1500,
+          // forbidClick: true
+          // });
+          Message({
+            message: '服务器异常...',
+            type: 'warning',
+            offset:60
+          });
+      }
+      return Promise.resolve(response);
     }
   },
   // 服务器状态码不是2开头的的情况

@@ -65,7 +65,7 @@ export default {
     async initData(){
       let _this = this;
       let responseData = await EVENT_LIST();
-      if (responseData && responseData.status === 200){
+      if (responseData && responseData.statusCode === 200){
         _this.mnEventList = responseData.data;
       }
     }
