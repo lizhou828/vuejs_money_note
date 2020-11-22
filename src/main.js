@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import {currency} from './common/currency'
+import Moment from 'moment'
 
 import '../static/public/css/style.css'
 import '../static/public/colors/green/green.css'
@@ -13,6 +14,11 @@ import '../static/public/css/swipebox.css'
 // 定义全局组件(自定义)
 import commonHead from '@/components/mn/commonHead'
 Vue.component('commonHead',commonHead);
+
+// 定义全局时间戳过滤器
+Vue.filter('formatDate', function(value) {
+  return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+})
 
 //定义全局过滤器
 Vue.filter('currency',currency);
