@@ -41,13 +41,16 @@
           </div>
         </div>
       </div>
+      <searchIconFloat></searchIconFloat>
     </div>
 </template>
 
 <script>
   import {EVENT_LIST} from "../../common/request_url";
+  import SearchIconFloat from "../mn/searchIconFloat";
 export default {
   name: 'list',
+  components: {SearchIconFloat},
   data() {
     return {
       mnEventList: []

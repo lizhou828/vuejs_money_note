@@ -10,10 +10,10 @@ if (process.env.NODE_ENV == 'development') {
   axios.defaults.baseURL = 'http://192.168.1.103:8087';
 }
 else if (process.env.NODE_ENV == 'testing') {
-  axios.defaults.baseURL = 'http://127.0.0.1:8080';
+  axios.defaults.baseURL = 'http://192.168.1.105:8087';
 }
 else if (process.env.NODE_ENV == 'production') {
-  axios.defaults.baseURL = 'http://47.104.21.35:8080';
+  axios.defaults.baseURL = 'http://192.168.1.105:8087';
 }
 
 //响应拦截器

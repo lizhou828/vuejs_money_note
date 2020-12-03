@@ -30,14 +30,16 @@
           </div>
         </div>
       </div>
+      <searchIconFloat></searchIconFloat>
     </div>
 </template>
 
 <script>
 import {USER_CENTER} from "../../common/request_url";
-
+import SearchIconFloat from "../mn/searchIconFloat";
 export default {
   name: 'userCenter',
+  components: {SearchIconFloat},
   data() {
     return {
       userCenterUserDto: {},

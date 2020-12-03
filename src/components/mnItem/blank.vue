@@ -70,14 +70,16 @@
         </div>
       </div>
     </div>
-
+    <searchIconFloat></searchIconFloat>
   </div>
 </template>
 
 <script>
   import {ITEM_DETAIL,ITEM_DELETE,ITEM_SAVE_OR_UPDATE } from "../../common/request_url";
+  import SearchIconFloat from "../mn/searchIconFloat";
   export default {
     name: 'blank',
+    components: {SearchIconFloat},
     data() {
       // 自定义校验金额
       var validateMoney = (rule, value, callback) => {

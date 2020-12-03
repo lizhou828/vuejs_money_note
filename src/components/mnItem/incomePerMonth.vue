@@ -90,6 +90,7 @@
           </div>
         </div>
       </div>
+      <searchIconFloat></searchIconFloat>
     </div>
 </template>
 
@@ -97,8 +98,10 @@
 import {formatDate} from "../../common/date";
 import {MN_INCOME_PER_MONTH} from "../../common/request_url";
 import moment from 'moment'
+import SearchIconFloat from "../mn/searchIconFloat";
 export default {
   name: 'incomePerMonth',
+  components: {SearchIconFloat},
   data() {
     return {
       month:'',

@@ -94,14 +94,17 @@
         </div>
       </div>
     </div>
+    <searchIconFloat></searchIconFloat>
   </div>
 </template>
 
 <script>
   import {MN_DAY_LIST} from "../../common/request_url";
   import moment from 'moment'
+  import SearchIconFloat from "../mn/searchIconFloat";
   export default {
     name: 'dayList',
+    components: {SearchIconFloat},
     data() {
       return {
         currentDate: '',

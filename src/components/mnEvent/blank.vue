@@ -67,13 +67,16 @@
           </div>
         </div>
       </div>
+      <searchIconFloat></searchIconFloat>
     </div>
 </template>
 
 <script>
 import {EVENT_DETAIL,EVENT_DELETE,EVENT_SAVE_OR_UPDATE} from "../../common/request_url";
+import SearchIconFloat from "../mn/searchIconFloat";
 export default {
   name: 'blank',
+  components: {SearchIconFloat},
   data() {
     return {
       isDisabled: false,

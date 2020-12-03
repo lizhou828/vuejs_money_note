@@ -10,11 +10,14 @@
             <img src="/static/public/images/icons/pencil.png" alt="" title=""/>
       </a>
     </div>
+
   </div>
 </template>
 
 <script>
+
 import {formatDate} from '../../common/date.js';
+
 export default {
   name: 'commonHead',
   inject:['reload'],

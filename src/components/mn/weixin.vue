@@ -27,12 +27,15 @@
           </div>
         </div>
       </div>
+      <searchIconFloat></searchIconFloat>
     </div>
 </template>
 
 <script>
+  import SearchIconFloat from "./searchIconFloat";
 export default {
   name: 'weixin',
+  components: {SearchIconFloat},
   mounted() {
     setTimeout(function () {
       document.getElementById("header").style.top = "0px";
