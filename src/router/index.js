@@ -6,7 +6,7 @@ import Router from 'vue-router'
  */
 const routerPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(error=> error)
+  return routerPush.call(this, location).catch(error => error)
 };
 
 // import HelloWorld from '@/components/HelloWorld'
@@ -27,6 +27,7 @@ import mnItemBlank from '@/components/mnItem/blank'
 import mnItemDayList from '@/components/mnItem/dayList'
 import incomePerMonth from '@/components/mnItem/incomePerMonth'
 import payedPerMonth from '@/components/mnItem/payedPerMonth'
+import mnItemSearch from '@/components/mnItem/search'
 
 
 Vue.use(Router);
@@ -92,44 +93,50 @@ const router = new Router({
     },
 
     {
-      path:'/user/userCenter',
-      name:'个人中心',
-      component:userCenter
+      path: '/user/userCenter',
+      name: '个人中心',
+      component: userCenter
     },
     {
-      path:'/mnItem/incomePerMonth',
-      name:'收入汇总',
-      component:incomePerMonth,
+      path: '/mnItem/incomePerMonth',
+      name: '收入汇总',
+      component: incomePerMonth,
       meta: {
         requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
       }
     },
     {
-      path:'/mnItem/payedPerMonth',
-      name:'支出汇总',
-      component:payedPerMonth,
+      path: '/mnItem/payedPerMonth',
+      name: '支出汇总',
+      component: payedPerMonth,
+      meta: {
+        requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+      }
+    },
+    {
+      path: '/mnItem/search',
+      name: '搜索记账条目',
+      component: mnItemSearch,
       meta: {
         requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
       }
     },
 
     {
-      path:'/mn/weixin',
-      name:'关注我们',
-      component:weixin
+      path: '/mn/weixin',
+      name: '关注我们',
+      component: weixin
     },
     {
-      path:'/mn/contact',
-      name:'联系我们',
-      component:contact
-    },{
-      path:'/mn/setting',
-      name:'设置',
-      component:setting
+      path: '/mn/contact',
+      name: '联系我们',
+      component: contact
+    }, {
+      path: '/mn/setting',
+      name: '设置',
+      component: setting
 
     }
-
-
 
 
   ]
@@ -137,7 +144,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-    if (  localStorage.getItem('token')) {  // 还可以用store.state.token  通过vuex state获取当前的token是否存在
+    if (localStorage.getItem('token')) {  // 还可以用store.state.token  通过vuex state获取当前的token是否存在
       next();
     }
     else {
