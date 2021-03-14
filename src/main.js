@@ -11,6 +11,12 @@ import '../static/public/colors/green/green.css'
 import '../static/public/css/idangerous.swiper.css'
 import '../static/public/css/swipebox.css'
 
+// 需要调试时，开启Vconsole的代码
+// import Vconsole from 'vconsole';
+// let vConsole = new Vconsole();
+// export default vConsole
+
+
 // 定义全局组件(自定义)
 import commonHead from '@/components/mn/commonHead'
 Vue.component('commonHead',commonHead);
