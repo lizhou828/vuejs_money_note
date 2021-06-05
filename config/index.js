@@ -12,8 +12,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {},
 
+    // 前端服务对外暴露的ip和端口
     // Various Dev Server settings
-    host: '192.168.1.103', // can be overwritten by process.env.HOST
+    host: '192.168.1.104', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

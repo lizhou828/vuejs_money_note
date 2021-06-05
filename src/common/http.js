@@ -5,9 +5,9 @@ import { Message} from 'element-ui';
 //==========================================================================================axios全局的配置==========================================================================================
 axios.defaults.timeout = 10000;
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
-// 环境的切换
+// 后端API接口（环境的切换）
 if (process.env.NODE_ENV == 'development') {
-  axios.defaults.baseURL = 'http://192.168.1.103:8087';
+  axios.defaults.baseURL = 'http://192.168.1.104:8087';
 }
 else if (process.env.NODE_ENV == 'testing') {
   axios.defaults.baseURL = 'http://192.168.1.105:8087';
@@ -74,6 +74,13 @@ axios.interceptors.response.use(
           });
           break;
         case 500:
+          Message({
+            message: response.data.message,
+            type: 'warning',
+            offset:60
+          });
+          break;
+        case 503:
           Message({
             message: response.data.message,
             type: 'warning',

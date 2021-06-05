@@ -13,14 +13,11 @@
                     <div class="posts_archive_page">
 
                       <h2 class="page_title">搜索</h2>
-                      <div class="toogle_wrap_blog radius8" style="text-align: center">
-                        <el-button-group style="width: 100%">
-                          <!--<el-button  style="border-radius: 24px 0 0 24px;" type="success"  plain icon="el-icon-arrow-left" @click=goNextPage()></el-button>-->
-                          <el-input placeholder="请输入要搜索的内容" v-model="keyword" class="input-with-select">
-                            <el-button slot="append" icon="el-icon-search" @click="searchAndOrderBy()"></el-button>
-                          </el-input>
-                          <!--<el-button style="border-radius: 0 24px 24px 0;float: right;" type="success" plain icon="el-icon-arrow-right" @click=goLastPage()></el-button>-->
-                        </el-button-group>
+                      <div class="toogle_wrap_blog radius8" style="text-align: center;height: 50px" >
+                        <el-input style="width: 60%;float: left;font-size: 18px" placeholder="请输入要搜索的关键字" v-model="keyword" class="input-with-select">
+                        </el-input>
+                        <el-button  style="width: 15%;float: right;margin-left: 2%" slot="append" icon="el-icon-delete" @click="clearKeywords()"></el-button>
+                        <el-button  style="width: 15%;float: right" slot="append" icon="el-icon-search" @click="searchAndOrderBy()"></el-button>
                       </div>
 
                       <el-row>
@@ -33,7 +30,7 @@
                         <!--<li v-for="i in infiniteCount" class="infinite-list-item" style="line-height: 150px">{{ i }}</li>-->
                       <!--</ul>-->
 
-                      <ul class="posts" v-infinite-scroll="loadMoreData"  style="padding:10px 0 0 0; overflow:auto">
+                      <ul class="posts" style="padding:10px 0 0 0; overflow:auto">
                         <li class="post" v-for="mnItem in  allMnItemList " @click="editItemDetail(mnItem.itemId)">
                           <a href="javascript:void(0)" class="post_more"></a>
                           <div class="post_right_reveal">
@@ -61,7 +58,7 @@
                         </li>
                       </ul>
                       <p v-if="loading">加载中...</p>
-                      <p v-if="noMore">没有更多了</p>
+                      <!--<p v-if="noMore">没有更多了</p>-->
 
                     </div>
                     <!--End of posts archive page-->
@@ -93,6 +90,7 @@
 <script>
   import {SEARCH_ITEM_NAME_BY_LIKE} from "../../common/request_url";
   import moment from 'moment'
+  import { Message} from 'element-ui';
 
   export default {
     name: 'mnItemSearch',
@@ -104,11 +102,12 @@
         orderBy: '',
         ascDesc: '',
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 10,
         total:0,
         totalPage:0,
         allMnItemList:[],
-        loading: false
+        loading: false,
+
       }
     },
     methods: {
@@ -117,6 +116,11 @@
           {path: '/mnItem/blank', query: {itemId: item_id}}
         )
       },
+      clearKeywords(){
+        this.keyword = "";
+        localStorage.setItem("mnItem_search_keyword","");
+      },
+
       async initData() {
         await this.searchAndOrderBy()
       },
@@ -128,6 +132,9 @@
         }
         _this.keyword = _this.keyword == null && typeof _this.keyword == "undefined" ? "" : _this.keyword;
 
+        if(_this.keyword == "" || _this.keyword == null || typeof  _this.keyword == "undefined"){
+          return
+        }
         let responseData = await SEARCH_ITEM_NAME_BY_LIKE({
           "keyword": _this.keyword,
           "orderBy": _this.orderBy,
@@ -137,15 +144,22 @@
         });
         if (responseData && responseData.statusCode === 200) {
           _this.mnItemList = responseData.data.resultList;
-          _this.allMnItemList.push.apply(_this.allMnItemList, this.mnItemList);
+          _this.allMnItemList.push.apply(_this.allMnItemList, this.mnItemList); // //将分页查询的数据拼接到一起，此种方式不会产生一个新的数组
+          _this.allMnItemList = Array.from(new Set(_this.allMnItemList)); //利用ES6的set数据结构，进行去重
+
           _this.pageNum = responseData.data.pageNo;
           _this.pageSize = responseData.data.pageSize;
           _this.total = responseData.data.total;
           _this.totalPage = responseData.data.totalPage;
           if(_this.mnItemList != null && _this.mnItemList.length > 0){
             localStorage.setItem("mnItem_search_keyword",_this.keyword);
-          }else{
+          }else if( (_this.allMnItemList == null || _this.allMnItemList.length == 0) && (_this.mnItemList = null ||  _this.mnItemList.length == 0)){
             localStorage.setItem("mnItem_search_keyword","");
+            Message({
+              message: '没有相关记账数据...',
+              type: 'warning',
+              offset:60
+            });
           }
         }
       },
@@ -154,34 +168,49 @@
         this.ascDesc = ascDesc;
         this.searchAndOrderBy()
       },
-      goNextPage() {
-        if(this.pageNum >= this.totalPage){
-          this.pageNum = this.totalPage
-        }else{
-          this.pageNum += 1;
-        }
-        if(this.allMnItemList.length < this.total){
+      // goNextPage() {
+      //   if(this.pageNum >= this.totalPage){
+      //     this.pageNum = this.totalPage
+      //   }else{
+      //     this.pageNum += 1;
+      //   }
+      //   if(this.allMnItemList.length < this.total){
+      //     this.searchAndOrderBy();
+      //   }
+      //
+      // },
+      // goLastPage() {
+      //   if(this.pageNum <= 0){
+      //     this.pageNum = 1;
+      //   }else{
+      //     this.pageNum -= 1;
+      //   }
+      //   if(this.allMnItemList.length < this.total){
+      //     this.searchAndOrderBy();
+      //   }
+      // },
+      loadMoreData(){
+        console.info("loadMoreData...");
+
+        if (this.loadSign) { //当其为true 的时候进入方法
+          //判断数据是否加载完毕，完毕就返回不在继续请求后台加载数据
+          if (this.pageNum > this.totalPage) {
+            console.info("已到最后一页了");
+            return;
+          }
+          //进入加载数据时，将控制字段更新，避免多次触发调用
+          this.loadSign = false;
+          console.info("this.pageNum =" + this.pageNum );
+          this.pageNum +=1;
+          console.info("this.pageNum =" + this.pageNum );
           this.searchAndOrderBy();
         }
 
-      },
-      goLastPage() {
-        if(this.pageNum <= 0){
-          this.pageNum = 1;
-        }else{
-          this.pageNum -= 1;
-        }
-        if(this.allMnItemList.length < this.total){
-          this.searchAndOrderBy();
-        }
-      },
-      loadMoreData(){
-        console.info("loadMoreData...");
-        this.loading = true;
-        setTimeout(() => {
-          this.goNextPage();
-          this.loading = false
-        }, 2000)
+        // this.loading = true;
+        // setTimeout(() => {
+        //   this.goNextPage();
+        //   this.loading = false
+        // }, 2000)
 
       }
     },
@@ -189,12 +218,12 @@
       this.initData();
     },
     computed: {
-      noMore () {
-        return this.allMnItemList.length >= this.total
-      },
-      disabled () {
-        return this.loading || this.noMore
-      }
+      // noMore () {
+      //   return this.allMnItemList.length >= this.total
+      // },
+      // disabled () {
+      //   return this.loading || this.noMore
+      // }
     },
     watch: {
       // 监听数据变化
@@ -202,7 +231,7 @@
         handler: function(o,u) {
 
           //这时候 o = 岑先生、u = 不认识
-          console.log('数据更新', o, u);
+          // console.log('数据更新', o, u);
           this.pageNum =1
           this.allMnItemList =[]
           this.mnItemList = []
@@ -214,7 +243,34 @@
     mounted() {
       setTimeout(function () {
         document.getElementById("header").style.top = "0px";
-      }, 100)
+      }, 100);
+
+      // 监听滚动条是否滚到最底部
+      let _this = this;
+      window.onscroll = function(){
+        //变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
+        //变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        //变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+        //滚动条到底部的条件
+        if( scrollTop + windowHeight == scrollHeight ){
+          //到了这个就可以进行业务逻辑加载后台数据了
+          console.log("到了底部");
+          _this.loadSign = true; // 滚到底部后， 允许加载下一页数据
+          _this.loadMoreData();
+
+          if (_this.allMnItemList != null && _this.allMnItemList.length != 0 && _this.pageNum > _this.totalPage) {
+            Message({
+              message: '我是有底线的...',
+              type: 'warning',
+              offset:60
+            });
+          }
+
+        }
+      }
     }
   }
 </script>

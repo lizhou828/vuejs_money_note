@@ -29,7 +29,7 @@
 
                         <ul class="posts">
 
-                          <li class="post"  v-if="currentMonthSumMap && currentMonthSumMap.length > 0 ">
+                          <li class="post"  v-if="currentMonthSumMap">
                             <a href="javascript:void(0)" class="post_more"></a>
                             <div class="post_right_reveal">
                               <h4>
