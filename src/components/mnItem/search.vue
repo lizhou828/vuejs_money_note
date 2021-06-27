@@ -14,21 +14,18 @@
 
                       <h2 class="page_title">搜索</h2>
                       <div class="toogle_wrap_blog radius8" style="text-align: center;height: 50px" >
-                        <el-input style="width: 60%;float: left;font-size: 18px" placeholder="请输入要搜索的关键字" v-model="keyword" class="input-with-select">
+                        <el-input style="width: 60%;float: left;font-size: 18px" placeholder="请输入关键字" v-model="keyword" class="input-with-select">
                         </el-input>
                         <el-button  style="width: 15%;float: right;margin-left: 2%" slot="append" icon="el-icon-delete" @click="clearKeywords()"></el-button>
                         <el-button  style="width: 15%;float: right" slot="append" icon="el-icon-search" @click="searchAndOrderBy()"></el-button>
                       </div>
 
-                      <el-row>
-                      <el-button type="success" plain @click="orderByColumn(month,'note_date','asc')">按日期排序</el-button>
-                      <el-button type="primary" plain @click="orderByColumn(month,'money','desc')">按金额排序</el-button>
-                      </el-row>
+                      <!--<el-row>-->
+                      <!--<el-button type="success" plain @click="orderByColumn(month,'note_date','asc')">按日期排序</el-button>-->
+                      <!--<el-button type="primary" plain @click="orderByColumn(month,'money','desc')">按金额排序</el-button>-->
+                      <!--</el-row>-->
 
 
-                      <!--<ul class="infinite-list" v-infinite-scroll="loadMoreData" infinite-scroll-disabled="disabled" infinite-scroll-distance="100"  style="overflow:auto">-->
-                        <!--<li v-for="i in infiniteCount" class="infinite-list-item" style="line-height: 150px">{{ i }}</li>-->
-                      <!--</ul>-->
 
                       <ul class="posts" style="padding:10px 0 0 0; overflow:auto">
                         <li class="post" v-for="mnItem in  allMnItemList " @click="editItemDetail(mnItem.itemId)">
@@ -57,7 +54,7 @@
                           </div>
                         </li>
                       </ul>
-                      <p v-if="loading">加载中...</p>
+                      <!--<p v-if="loading">加载中...</p>-->
                       <!--<p v-if="noMore">没有更多了</p>-->
 
                     </div>
@@ -106,7 +103,7 @@
         total:0,
         totalPage:0,
         allMnItemList:[],
-        loading: false,
+        loadSign: false,
 
       }
     },
@@ -189,7 +186,7 @@
       //     this.searchAndOrderBy();
       //   }
       // },
-      loadMoreData(){
+      loadMoreData() {
         console.info("loadMoreData...");
 
         if (this.loadSign) { //当其为true 的时候进入方法
@@ -200,19 +197,23 @@
           }
           //进入加载数据时，将控制字段更新，避免多次触发调用
           this.loadSign = false;
-          console.info("this.pageNum =" + this.pageNum );
-          this.pageNum +=1;
-          console.info("this.pageNum =" + this.pageNum );
+          console.info("this.pageNum =" + this.pageNum);
+          this.pageNum += 1;
+          console.info("this.pageNum =" + this.pageNum);
           this.searchAndOrderBy();
         }
+      },
 
-        // this.loading = true;
-        // setTimeout(() => {
-        //   this.goNextPage();
-        //   this.loading = false
-        // }, 2000)
-
+      // 判断浏览器函数
+      isMobile(){
+        if(window.navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)) {
+          return true; // 移动端
+        }else{
+          return false; // PC端
+        }
       }
+
+
     },
     created: function () {
       this.initData();
@@ -254,19 +255,26 @@
         var windowHeight = document.documentElement.clientHeight || document.body.clientHeight;
         //变量scrollHeight是滚动条的总高度
         var scrollHeight = document.documentElement.scrollHeight||document.body.scrollHeight;
+        console.log("scrollTop + windowHeight =" + (scrollTop + windowHeight) );
+        console.log("scrollHeight =" + (scrollHeight) );
+
+        //因移动端和PC端浏览器的尺寸不一，滚动条到底部的条件也不一样
+        var arriveBottom = scrollTop + windowHeight == scrollHeight;
+        if(_this.isMobile()){
+          // 快到底部时触发，兼容移动设备
+          arriveBottom = scrollTop + windowHeight >= scrollHeight - 55 && scrollTop + windowHeight < scrollHeight - 50
+        }
+
         //滚动条到底部的条件
-        if( scrollTop + windowHeight == scrollHeight ){
+        if( arriveBottom ){
           //到了这个就可以进行业务逻辑加载后台数据了
           console.log("到了底部");
           _this.loadSign = true; // 滚到底部后， 允许加载下一页数据
           _this.loadMoreData();
 
           if (_this.allMnItemList != null && _this.allMnItemList.length != 0 && _this.pageNum > _this.totalPage) {
-            Message({
-              message: '我是有底线的...',
-              type: 'warning',
-              offset:60
-            });
+            console.log("我是有底线的....");
+
           }
 
         }
