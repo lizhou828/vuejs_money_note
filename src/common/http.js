@@ -13,7 +13,7 @@ else if (process.env.NODE_ENV == 'testing') {
   axios.defaults.baseURL = 'http://192.168.1.105:8087';
 }
 else if (process.env.NODE_ENV == 'production') {
-  axios.defaults.baseURL = 'http://lizhou828.vicp.cc:28262';
+  axios.defaults.baseURL = 'http://api.lizhou828.com';
 }
 
 //响应拦截器
